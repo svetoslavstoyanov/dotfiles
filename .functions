@@ -1,0 +1,9 @@
+
+function mkd() {
+	mkdir -p "$@" && cd "$_";
+}
+
+function gcof(){
+    BRANCH=$(git branch | fzf | awk '{$1=$1};1');
+    git checkout $BRANCH;
+}

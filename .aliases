@@ -1,0 +1,2 @@
+alias ll="exa --long --header --icons --group-directories-first --sort=ext"
+alias lla="exa --long --header --icons --group-directories-first --sort=ext -a"
