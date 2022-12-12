@@ -1,48 +1,52 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-format = """$directory$package$git_branch$git_commit$git_status$git_metrics
-$character
-"""
-right_format = """$cmd_duration$nodejs$time"""
-
+format = """$directory$git_branch$git_status$git_metrics$fill$cmd_duration$package$nodejs\n$character"""
 
 add_newline = false
 
 [directory]
 truncation_length = 5
-format = "[$path]($style)[$lock_symbol]($lock_style) "
-style = "bold #f57800"
-read_only = "🔒"
+format = "[$path]($style)[$lock_symbol]($lock_style)"
+truncate_to_repo = true
+truncation_symbol = "…/"
+style = "bold #00FF7F"
+read_only = ""
 read_only_style= "bold white"
 
 [package]
-format = "via [🎁 $version](208 bold) "
+format = "[$symbol$version]($style) "
+symbol = " "
+style = "bold #ffa500"
 display_private = true
 
+[fill]
+symbol = " "
+
 [git_branch]
-format = " [$symbol$branch]($style) "
-symbol = "🍣 "
-style = "bold yellow"
+format = " [$symbol$branch]($style)"
+symbol = " "
+style = "bold #AF6EEB"
 
 [git_commit]
 commit_hash_length = 8
 style = "bold white"
 
 [git_status]
-conflicted = "⚔️ "
-ahead = "🏎️ 💨 ×${count}"
-behind = "🐢 ×${count}"
-diverged = "🔱 🏎️ 💨 ×${ahead_count} 🐢 ×${behind_count}"
-untracked = "🛤️  ×${count}"
-stashed = "📦 "
-modified = "📝 ×${count}"
-staged = "🗃️  ×${count}"
-renamed = "📛 ×${count}"
-deleted = "🗑️  ×${count}"
-style = "bright-white"
-format = "$all_status$ahead_behind"
+format = "[$all_status$ahead_behind]($style)"
+conflicted = " ⚔️ ×${count}"
+ahead = " ⇡×${count}"
+behind = " ⇣×${count}"
+diverged = " ⇕×${ahead_count} 🐢 ×${behind_count}"
+untracked = " ?×${count}"
+stashed = " $×${count}"
+modified = " !×${count}"
+staged = " +×${count}"
+renamed = " »×${count}"
+deleted = " ✘×${count}"
+style = "#b0e0e6"
 
 [git_state]
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
 rebase = "REBASING"
 merge =	"MERGING"
 revert = "REVERTING"
@@ -51,7 +55,6 @@ bisect = "BISECTING"
 am = "AM"
 am_or_rebase = "AM/REBASE"
 style =	"bold yellow"
-format = '\([$state( $progress_current/$progress_total)]($style)\) '
 disabled = false
 
 [git_metrics]
@@ -60,13 +63,9 @@ format = "[+$added]($added_style)/[-$deleted]($deleted_style) "
 
 [cmd_duration]
 min_time = 500
-format = "underwent [$duration](bold yellow)"
+format = "took [$duration]($style) "
+style =	"bold yellow"
 
 [nodejs]
-format = "[$version](bold green) "
-
-[time]
-disabled = false
-format = '🕙[\[$time\]]($style) '
-time_format = "%T"
-utc_time_offset = "1"
+format = "[$symbol$version](bold green)"
+version_format = "${raw}"
