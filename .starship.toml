@@ -1,6 +1,6 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-format = """$directory$git_branch$git_status$git_metrics$fill$cmd_duration$package$nodejs\n$character"""
+format = """$directory$git_branch$git_status$git_metrics$fill$cmd_duration$package$nodejs$java\n$character"""
 
 add_newline = false
 
@@ -69,3 +69,8 @@ style =	"bold yellow"
 [nodejs]
 format = "[$symbol$version](bold green)"
 version_format = "${raw}"
+
+[java]
+format = "[$symbol$version](red dimmed bold)"
+version_format = "${raw}"
+symbol = " "
