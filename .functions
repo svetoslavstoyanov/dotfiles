@@ -1,9 +1,37 @@
-
 function mkd() {
-	mkdir -p "$@" && cd "$_";
+    mkdir -p "$@" && cd "$_"
 }
 
-function gcof(){
-    BRANCH=$(git branch | fzf | awk '{$1=$1};1');
-    git checkout $BRANCH;
+function gcof() {
+    REMOTES_ORIGIN_PREFIX="remotes/origin/"
+
+    BRANCH=$(git branch -a | fzf | awk '{$1=$1};1')
+
+    if [[ "$BRANCH" == *"$REMOTES_ORIGIN_PREFIX"* ]]; then
+        BRANCH=${BRANCH#"remotes/origin/"}
+    fi
+    git checkout $BRANCH
+}
+
+function gitcm() {
+    # ADD DEFAULT IF TASK IS NOT AVAILABLE
+    CURRENT_PATH=$(pwd)
+
+    cd $CURRENT_PATH
+
+    if [ -z "$@" ]; then
+        echo PROVIDE MESSAGE
+        exit 0
+    fi
+
+    CURRENT_BRANCH=$(git branch --show current)
+
+    PROJECT=$(git branch --show current | cut -d'/' -f2 | cut -d'-' -f1)
+    TASK=$(git branch --show current | cut -d'/' -f2 | cut -d'-' -f2)
+    MESSAGE=$1
+
+    COMMIT_MESSAGE="[$PROJECT-$TASK] - $@"
+
+    git commit -m "$COMMIT_MESSAGE"
+
 }
