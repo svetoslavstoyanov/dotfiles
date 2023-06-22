@@ -27,7 +27,6 @@ function glf(){
 }
 
 function gitcm() {
-    # ADD DEFAULT IF TASK IS NOT AVAILABLE
     CURRENT_PATH=$(pwd)
 
     cd $CURRENT_PATH
@@ -37,16 +36,7 @@ function gitcm() {
         exit 0
     fi
 
-    CURRENT_BRANCH=$(git branch --show current)
-
-    PROJECT=$(git branch --show current | cut -d'/' -f2 | cut -d'-' -f1)
-    TASK=$(git branch --show current | cut -d'/' -f2 | cut -d'-' -f2)
-    MESSAGE=$1
-
-    COMMIT_MESSAGE="[$PROJECT-$TASK] - $@"
-
-    git commit -m "$COMMIT_MESSAGE"
-
+    git commit -m "$(generateCommitStashMessage $@)"
 }
 
 function gstaaf(){
@@ -75,5 +65,15 @@ function getBranchName(){
         echo ${BRANCH#"remotes/origin/"}
     else
         echo $BRANCH
+    fi
+}
+
+function generateCommitStashMessage(){
+    PROJECT_TASK_PREFIX=$(git branch --show current | grep -oP '(?<=\/)\w+-\d+')
+
+    if [[ ! $PROJECT_TASK_PREFIX ]]; then
+        echo "$@"
+    else
+        echo "[$PROJECT_TASK_PREFIX] - $@"
     fi
 }
