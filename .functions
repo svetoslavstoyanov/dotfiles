@@ -35,7 +35,7 @@ function gitcm() {
 
     if [ -z "$@" ]; then
         echo ERROR: PROVIDE MESSAGE
-        exit 0
+        return
     fi
 
     PROJECT_TASK_PREFIX=$(git branch --show-current | grep -oP '(?<=\/)\w+-\d+')
