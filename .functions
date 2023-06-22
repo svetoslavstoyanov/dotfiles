@@ -1,3 +1,5 @@
+REMOTES_ORIGIN_PREFIX="remotes/origin/"
+
 function mkd() {
     mkdir -p "$@" && cd "$_"
 }
@@ -32,15 +34,27 @@ function gitcm() {
     cd $CURRENT_PATH
 
     if [ -z "$@" ]; then
-        echo PROVIDE MESSAGE
+        echo ERROR: PROVIDE MESSAGE
         exit 0
     fi
 
-    git commit -m "$(generateCommitStashMessage $@)"
+    PROJECT_TASK_PREFIX=$(git branch --show-current | grep -oP '(?<=\/)\w+-\d+')
+
+    if [[ ! $PROJECT_TASK_PREFIX ]]; then
+        echo "$@"
+    else
+        echo "[$PROJECT_TASK_PREFIX] - $@"
+    fi
 }
 
-function gstaaf(){
+function gstaaf() {
     STASH=$(git stash list | fzf | awk '{$1=$1};1')
+
+    if [ -z "$STASH" ]; then
+        echo "ERROR: CHOOSE STASH"
+        return
+    fi
+
     STASH_INDEX=$(echo $STASH | grep -oP '(?<=stash@{).*(?=})')
     
     echo APPLY STASH: $STASH
@@ -48,10 +62,7 @@ function gstaaf(){
     git stash apply $STASH_INDEX
 }
 
-
 function isOrigin() {
-    REMOTES_ORIGIN_PREFIX="remotes/origin/"
-
     if [[ "$1" == *"$REMOTES_ORIGIN_PREFIX"* ]]; then
         echo true
     else
@@ -62,18 +73,8 @@ function isOrigin() {
 function getBranchName(){
     local BRANCH=$1
     if [[ $(isOrigin $BRANCH) == true ]]; then
-        echo ${BRANCH#"remotes/origin/"}
+        echo ${BRANCH#"$REMOTES_ORIGIN_PREFIX"}
     else
         echo $BRANCH
-    fi
-}
-
-function generateCommitStashMessage(){
-    PROJECT_TASK_PREFIX=$(git branch --show current | grep -oP '(?<=\/)\w+-\d+')
-
-    if [[ ! $PROJECT_TASK_PREFIX ]]; then
-        echo "$@"
-    else
-        echo "[$PROJECT_TASK_PREFIX] - $@"
     fi
 }
