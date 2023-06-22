@@ -20,10 +20,8 @@ function glf(){
     local BRANCH=$(git branch -a | fzf | awk '{$1=$1};1')
 
     if [[ $(isOrigin $BRANCH) == true ]]; then
-        echo ORIGIN
         git pull origin $(getBranchName $BRANCH)
     else
-        echo LOCAL
         git merge $(getBranchName $BRANCH)
     fi
 }
