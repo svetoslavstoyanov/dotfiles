@@ -65,6 +65,16 @@ function gstadf() {
     git stash drop $STASH_INDEX
 }
 
+function gstasf() {
+    local STASH_INDEX=$(getStashIndex)
+
+    if [ -z "$STASH_INDEX" ]; then
+        return
+    fi
+
+    git stash show -p $STASH_INDEX
+}
+
 function getStashIndex() {
     local STASH=$(git stash list | fzf | awk '{$1=$1};1')
     echo $STASH | grep -oP '(?<=stash@{).*(?=})'
