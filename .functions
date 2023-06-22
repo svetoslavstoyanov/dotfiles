@@ -13,6 +13,12 @@ function gcof() {
     git checkout $BRANCH
 }
 
+function gcotf() {
+    TAG=$(git tag -l --sort=-v:refname | fzf | awk '{$1=$1};1')
+
+    git checkout $TAG
+}
+
 function gitcm() {
     # ADD DEFAULT IF TASK IS NOT AVAILABLE
     CURRENT_PATH=$(pwd)
