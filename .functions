@@ -3,20 +3,27 @@ function mkd() {
 }
 
 function gcof() {
-    REMOTES_ORIGIN_PREFIX="remotes/origin/"
-
     BRANCH=$(git branch -a | fzf | awk '{$1=$1};1')
 
-    if [[ "$BRANCH" == *"$REMOTES_ORIGIN_PREFIX"* ]]; then
-        BRANCH=${BRANCH#"remotes/origin/"}
-    fi
-    git checkout $BRANCH
+    git checkout $(getBranchName $BRANCH)
 }
 
 function gcotf() {
     TAG=$(git tag -l --sort=-v:refname | fzf | awk '{$1=$1};1')
 
     git checkout $TAG
+}
+
+function glf(){
+    BRANCH=$(git branch -a | fzf | awk '{$1=$1};1')
+
+    if [[ $(isOrigin $BRANCH) == true ]]; then
+        echo ORIGIN
+        git pull origin $(getBranchName $BRANCH)
+    else
+        echo LOCAL
+        git merge $(getBranchName $BRANCH)
+    fi
 }
 
 function gitcm() {
@@ -40,4 +47,24 @@ function gitcm() {
 
     git commit -m "$COMMIT_MESSAGE"
 
+}
+
+
+function isOrigin() {
+    REMOTES_ORIGIN_PREFIX="remotes/origin/"
+
+    if [[ "$1" == *"$REMOTES_ORIGIN_PREFIX"* ]]; then
+        echo true
+    else
+        echo false
+    fi
+}
+
+function getBranchName(){
+    local BRANCH=$1
+    if [[ $(isOrigin $BRANCH) == true ]]; then
+        echo ${BRANCH#"remotes/origin/"}
+    else
+        echo $BRANCH
+    fi
 }
