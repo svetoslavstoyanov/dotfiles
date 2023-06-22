@@ -49,6 +49,15 @@ function gitcm() {
 
 }
 
+function gstaaf(){
+    STASH=$(git stash list | fzf | awk '{$1=$1};1')
+    STASH_INDEX=$(echo $STASH | grep -oP '(?<=stash@{).*(?=})')
+    
+    echo APPLY STASH: $STASH
+    
+    git stash apply $STASH_INDEX
+}
+
 
 function isOrigin() {
     REMOTES_ORIGIN_PREFIX="remotes/origin/"
