@@ -96,3 +96,16 @@ function getBranchName(){
         echo $BRANCH
     fi
 }
+
+function npmr(){
+    local FILE='package.json'
+
+    if ! test -f "$FILE"; then
+        echo "File does not exist."
+        return 0;
+    fi
+
+    local COMMAND=$(jq .scripts "$FILE" | fzf | grep -Po "\".+\":"  | cut -d'"' -f 2)
+    echo COMMAND: $COMMAND
+    npm run $COMMAND
+}
