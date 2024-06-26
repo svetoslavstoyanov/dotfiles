@@ -16,7 +16,7 @@ function gcotf() {
     git checkout $TAG
 }
 
-function glf(){
+function glf() {
     local BRANCH=$(git branch -a | fzf | awk '{$1=$1};1')
 
     if [[ $(isOrigin $BRANCH) == true ]]; then
@@ -47,7 +47,7 @@ function gitcm() {
 
 function gstaaf() {
     local STASH_INDEX=$(getStashIndex)
-    
+
     if [ -z "$STASH_INDEX" ]; then
         return
     fi
@@ -88,7 +88,7 @@ function isOrigin() {
     fi
 }
 
-function getBranchName(){
+function getBranchName() {
     local BRANCH=$1
     if [[ $(isOrigin $BRANCH) == true ]]; then
         echo ${BRANCH#"$REMOTES_ORIGIN_PREFIX"}
@@ -97,15 +97,23 @@ function getBranchName(){
     fi
 }
 
-function npmr(){
+function npmr() {
     local FILE='package.json'
 
     if ! test -f "$FILE"; then
         echo "File does not exist."
-        return 0;
+        return 0
     fi
 
-    local COMMAND=$(jq .scripts "$FILE" | fzf | grep -Po "\".+\":"  | cut -d'"' -f 2)
+    local COMMAND=$(echo $(jq .scripts package.json) | jq -r 'to_entries | sort_by(.key) | reverse | map( ( .key + " => " + .value ) ) | join("\n")' | fzf | grep -Po ".+(?= =>)")
+
+    if [ -z "${COMMAND}" ]; then
+        return
+    fi
+
     echo COMMAND: $COMMAND
+
     npm run $COMMAND
+    echo ": $(date +"%s"):0;npm run $COMMAND" >>~/.zsh_history
+    fc -R
 }
