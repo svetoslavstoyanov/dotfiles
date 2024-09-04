@@ -26,6 +26,12 @@ function glf() {
     fi
 }
 
+function gbdf {
+    local BRANCH=$(git branch -a | fzf | awk '{$1=$1};1')
+
+    git branch -D $(getBranchName $BRANCH)
+}
+
 function gitcm() {
     local CURRENT_PATH=$(pwd)
 
@@ -105,7 +111,7 @@ function npmr() {
         return 0
     fi
 
-    local COMMAND=$(echo $(jq .scripts package.json) | jq -r 'to_entries | sort_by(.key) | reverse | map( ( .key + " => " + .value ) ) | join("\n")' | fzf | grep -Po ".+(?= =>)")
+    local COMMAND=$(echo $(jq .scripts package.json) | jq -r 'to_entries | sort_by(.key) | reverse | map(.key + " => " + .value) | join("\n")' | fzf | grep -Po ".+(?= =>)")
 
     if [ -z "${COMMAND}" ]; then
         return
