@@ -4,3 +4,5 @@ alias glogdp="git log --stat --patch --graph --pretty='\''%Cred%h%Creset -%C(aut
 alias c="xclip"
 alias v="xclip -o"
 alias bat="batcat"
+alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
+
