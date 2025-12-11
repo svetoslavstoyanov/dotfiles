@@ -1,16 +1,25 @@
 source ~/.antigen.zsh
 antigen init ~/.antigenrc
 
-[[ -f "$HOME/.dotfiles/.aliases" ]] && source "$HOME/.dotfiles/.aliases"
+PATH_TO_DOT_FILES="$HOME/dev/personal/dotfiles"
+FILES=(".aliases" ".functions")
 
-[[ -f "$HOME/.dotfiles/.functions" ]] && source "$HOME/.dotfiles/.functions"
+for FILE in "${FILES[@]}"; do
+
+  PATH_WITH_FILE="$PATH_TO_DOT_FILES/$FILE"
+  if [[ -f "$PATH_WITH_FILE" ]]; then
+    echo "Sourcing: $PATH_WITH_FILE"
+    source "$PATH_WITH_FILE"
+  else
+    echo "Missing: $PATH_WITH_FILE"
+  fi
+done
 
 eval "$(starship init zsh)"
 
 # fnm
 export PATH="/home/svetoslav/.local/share/fnm:$PATH"
 eval "`fnm env`"
-
 
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
   --color=fg:-1,fg+:#d0d0d0,bg:-1,bg+:#262626
