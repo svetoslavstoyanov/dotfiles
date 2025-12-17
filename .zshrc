@@ -8,7 +8,6 @@ for FILE in "${FILES[@]}"; do
 
   PATH_WITH_FILE="$PATH_TO_DOT_FILES/$FILE"
   if [[ -f "$PATH_WITH_FILE" ]]; then
-    echo "Sourcing: $PATH_WITH_FILE"
     source "$PATH_WITH_FILE"
   else
     echo "Missing: $PATH_WITH_FILE"
