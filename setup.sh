@@ -1,12 +1,12 @@
-curl https://raw.githubusercontent.com/svetoslavstoyanov/dotfiles/refs/heads/master/print.sh
-source ./printh.sh
+source <(curl -fsSL https://raw.githubusercontent.com/svetoslavstoyanov/dotfiles/refs/heads/master/print.sh)>
 
-curl https://raw.githubusercontent.com/svetoslavstoyanov/dotfiles/refs/heads/master/create-user.sh | bash
+curl -fsSL https://raw.githubusercontent.com/svetoslavstoyanov/dotfiles/refs/heads/master/create-user.sh | bash
+
 
 #chmod +x ./create-user.sh
 #./create-user.sh
 
-curl https://raw.githubusercontent.com/svetoslavstoyanov/dotfiles/refs/heads/master/setup-dev.sh | bash
+curl -fsSL https://raw.githubusercontent.com/svetoslavstoyanov/dotfiles/refs/heads/master/setup-dev.sh | bash
 
 #chmod +x ./setup-dev.sh
 
