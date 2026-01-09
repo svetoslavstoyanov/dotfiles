@@ -10,4 +10,4 @@ curl https://raw.githubusercontent.com/svetoslavstoyanov/dotfiles/refs/heads/mas
 
 chmod +x ./setup-dev.sh
 
-rm -rf ./print.sh ./create-user.sh ./setup-dev.sh
+#rm -rf ./print.sh ./create-user.sh ./setup-dev.sh
