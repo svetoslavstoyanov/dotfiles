@@ -178,3 +178,40 @@ echo "Next steps:"
 echo "  1) Restart terminal or run: exec zsh"
 echo "  2) First LazyVim launch: nvim  (plugins will install)"
 echo "  3) fzf keys: Ctrl-R history, Ctrl-T files, Alt-C cd"
+
+### --- Clone repo + symlink ---
+REPO_URL="git@github.com:svetoslavstoyanov/dotfiles.git"
+CLONE_DIR="$HOME/dev/personal/dotfiles"
+SYMLINK_PATH="$HOME/.dotifles"
+
+log "Setting up repository: $REPO_URL"
+
+# Ensure parent dir exists
+mkdir -p "$(dirname "$CLONE_DIR")"
+
+if [[ -d "$CLONE_DIR/.git" ]]; then
+  log "Repository already exists. Pulling latest changes."
+  git -C "$CLONE_DIR" pull --ff-only || warn "Could not pull updates"
+elif [[ -d "$CLONE_DIR" ]]; then
+  warn "$CLONE_DIR exists but is not a git repo. Skipping clone."
+else
+  log "Cloning repository"
+  git clone "$REPO_URL" "$CLONE_DIR"
+fi
+
+log "Creating symlink: $SYMLINK_PATH → $CLONE_DIR"
+
+# If symlink exists but points somewhere else, replace it
+if [[ -L "$SYMLINK_PATH" ]]; then
+  if [[ "$(readlink "$SYMLINK_PATH")" != "$CLONE_DIR" ]]; then
+    warn "Symlink exists but points elsewhere. Replacing."
+    rm "$SYMLINK_PATH"
+    ln -s "$CLONE_DIR" "$SYMLINK_PATH"
+  else
+    log "Symlink already correct"
+  fi
+elif [[ -e "$SYMLINK_PATH" ]]; then
+  warn "$SYMLINK_PATH exists and is not a symlink. Skipping (safety)."
+else
+  ln -s "$CLONE_DIR" "$SYMLINK_PATH"
+fi
