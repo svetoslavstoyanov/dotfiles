@@ -181,7 +181,7 @@ echo "  2) First LazyVim launch: nvim  (plugins will install)"
 echo "  3) fzf keys: Ctrl-R history, Ctrl-T files, Alt-C cd"
 
 ### --- Clone repo + symlink ---
-REPO_URL="git@github.com:svetoslavstoyanov/dotfiles.git"
+REPO_URL="https://github.com/svetoslavstoyanov/dotfiles.git"
 CLONE_DIR="$HOME/dev/personal/dotfiles"
 SYMLINK_PATH="$HOME/.dotifles"
 
