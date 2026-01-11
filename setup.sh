@@ -39,6 +39,7 @@ $SUDO pacman -S --noconfirm --needed \
   lazygit \
   ripgrep \
   fd \
+  ssh \
   tree-sitter-cli \
   starship \
   base-devel
