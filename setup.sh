@@ -95,23 +95,6 @@ fi
 git clone https://github.com/LazyVim/starter "$NVIM_DIR"
 rm -rf "$NVIM_DIR/.git"
 
-# --- zsh config ---
-log "Updating ~/.zshrc (append if missing)"
-ZSHRC="$HOME/.zshrc"
-touch "$ZSHRC"
-
-# --- default shell ---
-ZSH_PATH="/usr/bin/zsh"
-if [[ "${SHELL:-}" != *zsh ]]; then
-  log "Setting zsh as default shell"
-  if [[ -w /etc/shells ]] || $SUDO true 2>/dev/null; then
-    if ! grep -qFx "$ZSH_PATH" /etc/shells; then
-      echo "$ZSH_PATH" | $SUDO tee -a /etc/shells >/dev/null
-    fi
-  fi
-  chsh -s "$ZSH_PATH" || warn "chsh failed (common on WSL). You can still use zsh by running: exec zsh"
-fi
-
 ### --- Clone repo + symlink ---
 REPO_URL="https://github.com/svetoslavstoyanov/dotfiles.git"
 CLONE_DIR="$HOME/dev/personal/dotfiles"
@@ -140,6 +123,23 @@ TARGET_HOME="$HOME"
 
 link_dir_content "$DOTFILES_CONFIG" "$TARGET_CONFIG"
 link_dir_content "$DOTFILES_HOME" "$TARGET_HOME"
+
+# --- zsh config ---
+#log "Updating ~/.zshrc (append if missing)"
+#ZSHRC="$HOME/.zshrc"
+#touch "$ZSHRC"
+
+# --- default shell ---
+ZSH_PATH="/usr/bin/zsh"
+if [[ "${SHELL:-}" != *zsh ]]; then
+  log "Setting zsh as default shell"
+  if [[ -w /etc/shells ]] || $SUDO true 2>/dev/null; then
+    if ! grep -qFx "$ZSH_PATH" /etc/shells; then
+      echo "$ZSH_PATH" | $SUDO tee -a /etc/shells >/dev/null
+    fi
+  fi
+  chsh -s "$ZSH_PATH" || warn "chsh failed (common on WSL). You can still use zsh by running: exec zsh"
+fi
 
 log "Done 🎉"
 echo "Next steps:"
