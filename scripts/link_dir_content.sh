@@ -3,14 +3,11 @@ link_dir_content() {
   local dst_dir="$2" # e.g. "$HOME/.config"
 
   mkdir -p "$dst_dir"
-  echo "TEST:"
-  echo $src_dir
-  echo $dst_dir
-  # If no matches, the loop should do nothing (avoid literal '*')
-  local item
-  shopt -s nullglob
+
+  local item name target
+  shopt -s nullglob dotglob
+
   for item in "$src_dir"/*; do
-    local name target
     name="$(basename "$item")"
     target="$dst_dir/$name"
 
@@ -23,5 +20,6 @@ link_dir_content() {
       echo "→ Linked $target → $item"
     fi
   done
-  shopt -u nullglob
+
+  shopt -u nullglob dotglob
 }
