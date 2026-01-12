@@ -3,7 +3,9 @@ link_dir_content() {
   local dst_dir="$2" # e.g. "$HOME/.config"
 
   mkdir -p "$dst_dir"
-
+  echo "TEST:"
+  echo $src_dir
+  echo $dst_dir
   # If no matches, the loop should do nothing (avoid literal '*')
   local item
   shopt -s nullglob
