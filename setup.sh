@@ -100,68 +100,6 @@ log "Updating ~/.zshrc (append if missing)"
 ZSHRC="$HOME/.zshrc"
 touch "$ZSHRC"
 
-append_once() {
-  local marker="$1"
-  local content="$2"
-  if grep -qF "$marker" "$ZSHRC"; then
-    warn "Found '$marker' in .zshrc; skipping append."
-  else
-    printf "\n%s\n" "$content" >>"$ZSHRC"
-  fi
-}
-
-append_once "# --- fzf ---" "$(
-  cat <<'EOF'
-# --- fzf ---
-if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
-  source /usr/share/fzf/key-bindings.zsh
-fi
-if [[ -f /usr/share/fzf/completion.zsh ]]; then
-  source /usr/share/fzf/completion.zsh
-fi
-
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
-export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always {} | head -500'"
-export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
-EOF
-)"
-
-append_once "# --- fnm ---" "$(
-  cat <<'EOF'
-# --- fnm ---
-eval "$(fnm env)"
-EOF
-)"
-
-append_once "# --- starship ---" "$(
-  cat <<'EOF'
-# --- starship ---
-eval "$(starship init zsh)"
-EOF
-)"
-
-append_once "# --- antigen ---" "$(
-  cat <<'EOF'
-# --- antigen ---
-source ~/.antigen.zsh
-antigen use oh-my-zsh
-antigen bundle git
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen apply
-EOF
-)"
-
-append_once "# --- aliases ---" "$(
-  cat <<'EOF'
-# --- aliases ---
-alias ls="eza --icons"
-alias cat="bat"
-EOF
-)"
-
 # --- default shell ---
 ZSH_PATH="/usr/bin/zsh"
 if [[ "${SHELL:-}" != *zsh ]]; then
@@ -174,16 +112,9 @@ if [[ "${SHELL:-}" != *zsh ]]; then
   chsh -s "$ZSH_PATH" || warn "chsh failed (common on WSL). You can still use zsh by running: exec zsh"
 fi
 
-log "Done 🎉"
-echo "Next steps:"
-echo "  1) Restart terminal or run: exec zsh"
-echo "  2) First LazyVim launch: nvim  (plugins will install)"
-echo "  3) fzf keys: Ctrl-R history, Ctrl-T files, Alt-C cd"
-
 ### --- Clone repo + symlink ---
 REPO_URL="https://github.com/svetoslavstoyanov/dotfiles.git"
 CLONE_DIR="$HOME/dev/personal/dotfiles"
-SYMLINK_PATH="$HOME/.dotifles"
 
 log "Setting up repository: $REPO_URL"
 
@@ -200,19 +131,18 @@ else
   git clone "$REPO_URL" "$CLONE_DIR"
 fi
 
-log "Creating symlink: $SYMLINK_PATH → $CLONE_DIR"
+source "$CLONE_DIR/scripts/bootstrap.sh"
 
-# If symlink exists but points somewhere else, replace it
-if [[ -L "$SYMLINK_PATH" ]]; then
-  if [[ "$(readlink "$SYMLINK_PATH")" != "$CLONE_DIR" ]]; then
-    warn "Symlink exists but points elsewhere. Replacing."
-    rm "$SYMLINK_PATH"
-    ln -s "$CLONE_DIR" "$SYMLINK_PATH"
-  else
-    log "Symlink already correct"
-  fi
-elif [[ -e "$SYMLINK_PATH" ]]; then
-  warn "$SYMLINK_PATH exists and is not a symlink. Skipping (safety)."
-else
-  ln -s "$CLONE_DIR" "$SYMLINK_PATH"
-fi
+DOTFILES_CONFIG="$CLONE_DIR/config"
+DOTFILES_HOME="$HOME/home"
+TARGET_CONFIG="$HOME/.config"
+TARGET_HOME="$HOME"
+
+link_dir_content "$DOTFILES_CONFIG" "$TARGET_CONFIG"
+link_dir_content "$DOTFILES_HOME" "$TARGET_HOME"
+
+log "Done 🎉"
+echo "Next steps:"
+echo "  1) Restart terminal or run: exec zsh"
+echo "  2) First LazyVim launch: nvim  (plugins will install)"
+echo "  3) fzf keys: Ctrl-R history, Ctrl-T files, Alt-C cd"

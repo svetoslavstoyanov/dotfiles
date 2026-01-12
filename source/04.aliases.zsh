@@ -6,3 +6,4 @@ alias p="xclip -o"
 alias bat="batcat"
 alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 alias v=nvim
+alias cat="bat"

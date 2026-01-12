@@ -1,3 +1,5 @@
+source ~/.antigen.zsh
+
 # Load oh-my-zsh library
 antigen use oh-my-zsh
 
