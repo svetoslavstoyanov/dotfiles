@@ -134,7 +134,7 @@ fi
 source "$CLONE_DIR/scripts/bootstrap.sh"
 
 DOTFILES_CONFIG="$CLONE_DIR/config"
-DOTFILES_HOME="$HOME/home"
+DOTFILES_HOME="$CLONE_DIR/home"
 TARGET_CONFIG="$HOME/.config"
 TARGET_HOME="$HOME"
 
