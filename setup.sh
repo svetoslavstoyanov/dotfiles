@@ -30,9 +30,3 @@ install_packages "$SUDO"
 
 config_tmux
 change_shell_to_zsh
-
-log "Done 🎉"
-echo "Next steps:"
-echo "  1) Restart terminal or run: exec zsh"
-echo "  2) First LazyVim launch: nvim  (plugins will install)"
-echo "  3) fzf keys: Ctrl-R history, Ctrl-T files, Alt-C cd"
