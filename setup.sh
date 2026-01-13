@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "$CLONE_DIR/scripts/bootstrap.sh"
+source "./scripts/bootstrap.sh"
 
 SUDO=""
 sudo_check SUDO
