@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 config_tmux() {
 
   mkdir -p ~/.config/tmux/plugins
