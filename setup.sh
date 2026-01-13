@@ -28,8 +28,8 @@ link_dir_content "$LINK_HOME_DIR" "$TARGET_LINK_HOME_DIR"
 
 install_packages "$SUDO"
 
-change_shell_to_zsh
 config_tmux
+change_shell_to_zsh
 
 log "Done 🎉"
 echo "Next steps:"
