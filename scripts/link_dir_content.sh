@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 link_dir_content() {
   local src_dir="$1" # e.g. "$CLONE_DIR/config"
   local dst_dir="$2" # e.g. "$HOME/.config"
