@@ -20,7 +20,8 @@ install_packages() {
     openssh \
     tree-sitter-cli \
     starship \
-    base-devel
+    base-devel \
+    ncurses
 
   # --- yay (AUR helper) ---
   if ! command -v yay &>/dev/null; then
