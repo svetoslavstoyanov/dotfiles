@@ -9,7 +9,6 @@ sudo_check SUDO
 # --- update ---
 log "Updating system"
 $SUDO pacman -Syu --noconfirm
-install_packages "$SUDO"
 
 # --- link dotfile repo ---
 LINK_REPO_DIR="$HOME/dev/personal/dotfiles"
@@ -24,8 +23,10 @@ link_dir_content "$LINK_CONFIG_DIR" "$TARGET_LINK_CONFIG_DIR"
 # --- link home dir ---
 LINK_HOME_DIR="$TARGET_LINK_REPO_DIR/home"
 TARGET_LINK_HOME_DIR="$HOME"
-rm .zshrc
+
 link_dir_content "$LINK_HOME_DIR" "$TARGET_LINK_HOME_DIR"
+
+install_packages "$SUDO"
 
 change_shell_to_zsh
 
