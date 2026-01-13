@@ -19,12 +19,12 @@ link_dir_content "$LINK_REPO_DIR" "$TARGET_LINK_REPO_DIR"
 # --- link config dir ---
 LINK_CONFIG_DIR="$TARGET_LINK_REPO_DIR/config"
 TARGET_LINK_CONFIG_DIR="$HOME/.config"
-link_dir_content "$LINK_DIR" "$TARGET_CONFIG"
+link_dir_content "$LINK_CONFIG_DIR" "$TARGET_LINK_CONFIG_DIR"
 
 # --- link home dir ---
 LINK_HOME_DIR="$TARGET_LINK_REPO_DIR/home"
 TARGET_LINK_HOME_DIR="$HOME"
-link_dir_content "$LINK_DIR" "$TARGET_HOME"
+link_dir_content "$LINK_HOME_DIR" "$TARGET_LINK_HOME_DIR"
 
 change_shell_to_zsh
 
