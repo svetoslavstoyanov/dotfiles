@@ -24,6 +24,7 @@ link_dir_content "$LINK_CONFIG_DIR" "$TARGET_LINK_CONFIG_DIR"
 # --- link home dir ---
 LINK_HOME_DIR="$TARGET_LINK_REPO_DIR/home"
 TARGET_LINK_HOME_DIR="$HOME"
+rm .zshrc
 link_dir_content "$LINK_HOME_DIR" "$TARGET_LINK_HOME_DIR"
 
 change_shell_to_zsh
