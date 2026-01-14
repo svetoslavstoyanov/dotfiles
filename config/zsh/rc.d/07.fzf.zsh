@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
   --color=fg:-1,fg+:#d0d0d0,bg:-1,bg+:#262626
   --color=hl:#5f87af,hl+:#5fd7ff,info:#afaf87,marker:#87ff00
