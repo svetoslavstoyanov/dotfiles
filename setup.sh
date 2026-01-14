@@ -10,14 +10,11 @@ sudo_check SUDO
 log "Updating system"
 $SUDO pacman -Syu --noconfirm
 
-# --- link dotfile repo ---
-LINK_REPO_DIR="$HOME/dev/personal/dotfiles"
-TARGET_LINK_REPO_DIR="$HOME/.dotfiles"
-link_dir_content "$LINK_REPO_DIR" "$TARGET_LINK_REPO_DIR"
-
 # --- link config dir ---
-LINK_CONFIG_DIR="$TARGET_LINK_REPO_DIR/config"
-TARGET_LINK_CONFIG_DIR="$HOME/.config"
+CONFIG="config"
+LINK_CONFIG_DIR="$TARGET_LINK_REPO_DIR/$CONFIG"
+TARGET_LINK_CONFIG_DIR="$HOME/.$CONFIG"
+
 link_dir_content "$LINK_CONFIG_DIR" "$TARGET_LINK_CONFIG_DIR"
 
 # --- link home dir ---
