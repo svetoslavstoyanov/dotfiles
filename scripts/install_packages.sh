@@ -13,6 +13,7 @@ install_packages() {
     btop \
     ranger \
     xclip \
+    unzip \
     neovim \
     lazygit \
     ripgrep \

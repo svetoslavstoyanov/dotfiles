@@ -9,7 +9,6 @@ antigen use oh-my-zsh
 antigen bundle git
 antigen bundle command-not-found
 antigen bundle docker
-antigen bundle gcloud
 
 # Load bundles from external repos
 antigen bundle zsh-users/zsh-completions

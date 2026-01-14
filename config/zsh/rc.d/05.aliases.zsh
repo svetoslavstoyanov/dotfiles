@@ -8,6 +8,7 @@ alias p="xclip -o"
 alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 alias v=nvim
 alias cat="bat"
+alias lg="lazygit"
 # --- .NET ---
 alias dn='dotnet new'
 alias dr='dotnet run'
