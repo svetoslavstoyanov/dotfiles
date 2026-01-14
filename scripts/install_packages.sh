@@ -74,4 +74,7 @@ install_packages() {
   git clone https://github.com/LazyVim/starter "$NVIM_DIR"
   rm -rf "$NVIM_DIR/.git"
 
+  # --- .NET ---
+  log "Installing .NET"
+  curl -fsSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel LTS
 }
