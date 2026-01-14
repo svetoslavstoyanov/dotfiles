@@ -13,7 +13,7 @@ $SUDO pacman -Syu --noconfirm
 # --- link config dir ---
 LINK_REPO_DIR="$HOME/dev/personal/dotfiles"
 CONFIG="config"
-LINK_CONFIG_DIR="$TARGET_LINK_REPO_DIR/$CONFIG"
+LINK_CONFIG_DIR="$LINK_REPO_DIR/$CONFIG"
 TARGET_LINK_CONFIG_DIR="$HOME/.$CONFIG"
 
 link_dir_content "$LINK_CONFIG_DIR" "$TARGET_LINK_CONFIG_DIR"
