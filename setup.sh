@@ -26,5 +26,7 @@ link_dir_content "$LINK_HOME_DIR" "$TARGET_LINK_HOME_DIR"
 
 install_packages "$SUDO"
 
+setup_locale "$SUDO"
+
 config_tmux
 change_shell_to_zsh
