@@ -1,6 +1,17 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-format = """$directory$git_branch$git_status$git_metrics$fill$cmd_duration$package$nodejs$java\n$character"""
+format = """
+$directory\
+$git_branch\
+$git_status\
+$git_metrics\
+$fill\
+$cmd_duration\
+$package\
+$nodejs\
+$java\
+$dotnet
+$character"""
 
 add_newline = false
 
@@ -74,3 +85,9 @@ version_format = "${raw}"
 format = "[$symbol$version](red dimmed bold)"
 version_format = "${raw}"
 symbol = " "
+
+[dotnet]
+symbol = ' '
+format = "[$symbol$version](#7F7FFF bold)"
+version_format = '${major}.${minor}'
+heuristic = true
