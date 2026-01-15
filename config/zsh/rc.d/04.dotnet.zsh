@@ -1,4 +1,3 @@
 #!/usr/sbin/zsh zsh
-
-eval "$(dotnet completions script zsh)"
-
+# DOES NOT WORK AT THE MOMENT
+#eval "$(dotnet completions script zsh)"
