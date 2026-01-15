@@ -13,11 +13,13 @@ install_packages() {
     btop \
     ranger \
     xclip \
+    zip \
     unzip \
     neovim \
     lazygit \
     ripgrep \
     fd \
+    zoxide \
     openssh \
     tree-sitter-cli \
     starship \
