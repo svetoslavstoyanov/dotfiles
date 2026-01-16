@@ -22,7 +22,7 @@ truncate_to_repo = true
 truncation_symbol = "…/"
 style = "bold #00FF7F"
 read_only = ""
-read_only_style= "bold white"
+read_only_style = "bold white"
 
 [package]
 format = "[$symbol$version]($style) "
@@ -59,13 +59,13 @@ style = "#b0e0e6"
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
 rebase = "REBASING"
-merge =	"MERGING"
+merge = "MERGING"
 revert = "REVERTING"
 cherry_pick = "CHERRY-PICKING"
 bisect = "BISECTING"
 am = "AM"
 am_or_rebase = "AM/REBASE"
-style =	"bold yellow"
+style = "bold yellow"
 disabled = false
 
 [git_metrics]
@@ -75,7 +75,7 @@ format = "[+$added]($added_style)/[-$deleted]($deleted_style) "
 [cmd_duration]
 min_time = 500
 format = "took [$duration]($style) "
-style =	"bold yellow"
+style = "bold yellow"
 
 [nodejs]
 format = "[$symbol$version](bold green)"
