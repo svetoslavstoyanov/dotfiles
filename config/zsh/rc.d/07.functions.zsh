@@ -126,22 +126,43 @@ function npmr() {
     fc -R
 }
 
-function cdf() {
-  if [[ "$#" != 0 ]]; then
-    builtin cd "$@"
-    return
-  fi
-  while true; do
-    local lsd=$(echo ".." && ls -p | grep '/$' | sed 's;/$;;')
-    local dir="$(printf '%s\n' "${lsd[@]}" |
-      fzf --reverse --preview '
-                __cd_nxt="$(echo {})";
-                __cd_path="$(echo $(pwd)/${__cd_nxt} | sed "s;//;/;")";
-                echo $__cd_path;
-                echo;
-                exa --long --icons --group-directories-first --sort=ext --all --no-time --no-user --no-permissions --no-filesize "${__cd_path}";
-        ')"
-    [[ ${#dir} != 0 ]] || return 0
-    builtin cd "$dir" &>/dev/null
-  done
+function zf() {
+ local dir
+ dir=$(zoxide query -l | sort -k2 -rn | fzf)
+ [ -n "$dir" ] && z "$dir"
 }
+
+function zgf() {
+ local dir
+ dir=$(zoxide query -l | xargs -I {} sh -c 'test -d {}/.git && echo {}' | fzf)
+ [ -n "$dir" ] && z "$dir"
+}
+
+function zpf() {
+  local dir
+  dir=$(zoxide query -l | sort -k2 -rn | grep -i personal | fzf)
+  [ -n "$dir" ] && z "$dir"
+ }
+
+function zwf() {
+  local dir
+  dir=$(zoxide query -l | grep -i work | fzf)
+  [ -n "$dir" ] && z "$dir"
+ }
+
+function zfv() {
+  zf && "$EDITOR"
+}
+
+function zgfv() {
+  zgf && "$EDITOR"
+}
+
+function zpfv() {
+  zpf && "$EDITOR"
+}
+
+function zwfv() {
+  zwf && "$EDITOR"
+}
+
