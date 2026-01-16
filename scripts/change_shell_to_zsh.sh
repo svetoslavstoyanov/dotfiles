@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source './log.sh'
-
 change_shell_to_zsh() {
   ZSH_PATH="/usr/bin/zsh"
   if [[ "${SHELL:-}" != *zsh ]]; then

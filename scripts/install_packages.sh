@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source './log.sh'
-
 install_packages() {
   local SUDO="$1"
   # --- packages ---
