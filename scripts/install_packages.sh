@@ -22,6 +22,7 @@ install_packages() {
     tree-sitter-cli \
     starship \
     base-devel \
+    lsof \
     ncurses
 
   # --- yay (AUR helper) ---
