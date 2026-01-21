@@ -9,6 +9,7 @@ alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir
 alias v=nvim
 alias cat="bat"
 alias lg="lazygit"
+alias ld="lazydocker"
 # --- .NET ---
 alias dn='dotnet new'
 alias dr='dotnet run'

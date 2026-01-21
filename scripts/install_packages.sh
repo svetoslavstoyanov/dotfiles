@@ -24,6 +24,7 @@ install_packages() {
     base-devel \
     lsof \
     jq \
+    lazydocker \
     ncurses
 
   # --- yay (AUR helper) ---
