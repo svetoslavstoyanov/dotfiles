@@ -166,3 +166,23 @@ function zwfv() {
   zwf && "$EDITOR"
 }
 
+function kpp() {
+  local PORT="$1"
+
+  if [[ -z "$PORT" ]]; then
+    echo "Usage: kpp <port>"
+    return 1
+  fi
+
+  local PIDS
+  PIDS=$(lsof -t -i :"$PORT" 2>/dev/null)
+
+  if [[ -z "$PIDS" ]]; then
+    echo "Nothing is running on port $PORT"
+    return 0
+  fi
+
+  echo "Killing process(es) on port $PORT: $PIDS"
+  kill -9 $PIDS
+}
+

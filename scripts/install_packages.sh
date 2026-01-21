@@ -23,6 +23,7 @@ install_packages() {
     starship \
     base-devel \
     lsof \
+    jq \
     ncurses
 
   # --- yay (AUR helper) ---
