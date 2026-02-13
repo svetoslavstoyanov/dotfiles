@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-alias ll="exa --long --header --icons --group-directories-first --sort=ext"
-alias lla="exa --long --header --icons --group-directories-first --sort=ext -a"
+alias ll="exa --long --header --icons --group-directories-first --sort=ext -F"
+alias lla="ll -aDf"
+alias lld="ll -D"
+alias llda="lld -a"
+alias llf="ll -f"
+alias llfa="ll -af"
 alias glogdp="git log --stat --patch --graph --pretty='\''%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset'\'"
 alias y="xclip"
 alias p="xclip -o"
