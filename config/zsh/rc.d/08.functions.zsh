@@ -105,25 +105,31 @@ function getBranchName() {
     fi
 }
 
+function runPackageJsonScript() {
+    local pm="$1"
+    local command
+
+    [[ -f package.json ]] || { echo "File does not exist."; return 1; }
+
+    command=$(
+        jq -r '.scripts | to_entries[] | "\(.key)\t=> \(.value)"' package.json |
+        fzf |
+        cut -f1
+    ) || return
+
+    [[ $? -eq 0 && -n "$command" ]] || return
+
+    "$pm" run "$command"
+    history -s "$pm run $command"
+    history -a
+}
+
 function npmr() {
-    local FILE='package.json'
+    runPackageJsonScript npm
+}
 
-    if ! test -f "$FILE"; then
-        echo "File does not exist."
-        return 0
-    fi
-
-    local COMMAND=$(echo $(jq .scripts package.json) | jq -r 'to_entries | sort_by(.key) | reverse | map(.key + " => " + .value) | join("\n")' | fzf | grep -Po ".+(?= =>)")
-
-    if [ -z "${COMMAND}" ]; then
-        return
-    fi
-
-    echo COMMAND: $COMMAND
-
-    npm run $COMMAND
-    echo ": $(date +"%s"):0;npm run $COMMAND" >>~/.zsh_history
-    fc -R
+function pnpmr() {
+    runPackageJsonScript pnpm
 }
 
 function zf() {
