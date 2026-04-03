@@ -6,7 +6,7 @@ install_packages() {
   log "Installing pacman packages"
   $SUDO pacman -S --noconfirm --needed \
     git curl wget \
-    zsh \
+    fish \
     bat eza fzf \
     btop \
     ranger \
@@ -48,23 +48,6 @@ install_packages() {
     fnm default lts-latest
   else
     warn "fnm not found after install. Skipping Node LTS install."
-  fi
-
-  # --- Oh My Zsh ---
-  if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-    log "Installing Oh My Zsh"
-    RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
-      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  else
-    warn "Oh My Zsh already installed"
-  fi
-
-  # --- Antigen ---
-  if [[ ! -f "$HOME/.antigen.zsh" ]]; then
-    log "Installing Antigen"
-    curl -fsSL git.io/antigen >"$HOME/.antigen.zsh"
-  else
-    warn "Antigen already installed"
   fi
 
   # --- LazyVim ---

@@ -29,4 +29,4 @@ install_packages "$SUDO"
 setup_locale "$SUDO"
 
 config_tmux
-change_shell_to_zsh
+change_shell_to_fish
