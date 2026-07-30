@@ -7,7 +7,7 @@ function mkd() {
 }
 
 function gcof() {
-    local BRANCH=$(git branch -a | fzf | awk '{$1=$1};1')
+    local BRANCH=$(git branch -a --sort=-committerdate | fzf | awk '{$1=$1};1')
 
     git checkout $(getBranchName $BRANCH)
 }
@@ -19,7 +19,7 @@ function gcotf() {
 }
 
 function glf() {
-    local BRANCH=$(git branch -a | fzf | awk '{$1=$1};1')
+    local BRANCH=$(git branch -a --sort=-committerdate | fzf | awk '{$1=$1};1')
 
     if [[ $(isOrigin $BRANCH) == true ]]; then
         git pull origin $(getBranchName $BRANCH)
@@ -29,7 +29,7 @@ function glf() {
 }
 
 function gbdf {
-    local BRANCH=$(git branch -a | fzf | awk '{$1=$1};1')
+    local BRANCH=$(git branch -a --sort=-committerdate | fzf | awk '{$1=$1};1')
 
     git branch -D $(getBranchName $BRANCH)
 }
@@ -120,8 +120,8 @@ function runPackageJsonScript() {
     [[ $? -eq 0 && -n "$command" ]] || return
 
     "$pm" run "$command"
-    history -s "$pm run $command"
-    history -a
+    print -s "$pm run $command"
+    fc -W
 }
 
 function npmr() {
