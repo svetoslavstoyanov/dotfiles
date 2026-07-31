@@ -28,4 +28,6 @@ alias dng='dotnet nuget'
 alias db='dotnet build'
 alias dres='dotnet restore'
 alias update='sudo pacman -Syu'
+# --- GIT ---
 alias gstp='git_stash_pick'
+alias gra='git restore --staged --worktree . && git clean -fd'
