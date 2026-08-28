@@ -31,3 +31,4 @@ alias update='sudo pacman -Syu'
 # --- GIT ---
 alias gstp='git_stash_pick'
 alias gra='git restore --staged --worktree . && git clean -fd'
+alias gcu='git reset HEAD~1'
