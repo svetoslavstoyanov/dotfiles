@@ -34,24 +34,6 @@ function gbdf {
     git branch -D $(getBranchName $BRANCH)
 }
 
-function gitcm() {
-    local CURRENT_PATH=$(pwd)
-
-    cd $CURRENT_PATH
-
-    if [ -z "$@" ]; then
-        echo ERROR: PROVIDE MESSAGE
-        exit 0
-    fi
-
-    local PROJECT_TASK_PREFIX=$(git branch --show-current | grep -oP '(?<=\/)\w+-\d+')
-
-    if [[ ! $PROJECT_TASK_PREFIX ]]; then
-        git commit -m "$@"
-    else
-        git commit -m "[$PROJECT_TASK_PREFIX] - $@"
-    fi
-}
 
 function gstaaf() {
     local STASH_INDEX=$(getStashIndex)
