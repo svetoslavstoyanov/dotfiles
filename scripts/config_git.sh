@@ -91,6 +91,19 @@ ensure_git_delta() {
   echo "✔ delta configured as Git pager"
 }
 
+ensure_git_defaults() {
+  log "Configuring Git defaults"
+
+  # Automatically configure the upstream when pushing a new branch for the
+  # first time, remove stale remote-tracking branches during fetches, and
+  # rebase local commits when pulling.
+  git config --global push.autoSetupRemote true
+  git config --global fetch.prune true
+  git config --global pull.rebase true
+
+  echo "✔ Git push, pull, and fetch defaults configured"
+}
+
 config_git() {
   log "Configuring Git identities"
 
@@ -103,6 +116,7 @@ config_git() {
     if [[ ! "$overwrite" =~ ^[Yy]$ ]]; then
       echo "✔ Keeping existing Git identity files"
       ensure_gitconfig_includes
+      ensure_git_defaults
       ensure_git_delta
       return
     fi
@@ -125,5 +139,6 @@ config_git() {
   write_git_identity "$personal_cfg" "$p_first $p_last" "$p_email"
   write_git_identity "$work_cfg" "$w_first $w_last" "$w_email"
   ensure_gitconfig_includes
+  ensure_git_defaults
   ensure_git_delta
 }
