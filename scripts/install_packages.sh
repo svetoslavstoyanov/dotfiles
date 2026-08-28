@@ -82,9 +82,4 @@ install_packages() {
   log "Installing .NET"
   curl -fsSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel LTS
 
-  # --- SDK_MAN AND JAVA ---
-  log "Installng sdkman"
-  curl -s "https://get.sdkman.io?sdkman_auto_answer=true&rcupdate=false" | bash
-  source "$HOME/.sdkman/bin/sdkman-init.sh"
-  sdk install java
 }
