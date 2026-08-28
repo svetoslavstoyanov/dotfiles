@@ -34,7 +34,6 @@ function gbdf {
     git branch -D $(getBranchName $BRANCH)
 }
 
-
 function gstaaf() {
     local STASH_INDEX=$(getStashIndex)
 
