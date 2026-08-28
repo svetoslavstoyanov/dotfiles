@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Prepends "[PROJECT-TICKET] - " from the current branch name.
+# Supports: feature/PROJ-123-rest  |  PROJ-123  |  PROJ-123-rest
+#
+# When core.hooksPath is set globally, repo-local hooks are skipped by Git.
+# This script still chains to .git/hooks/prepare-commit-msg if it exists.
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="${1:-}"
+SOURCE="${2:-}"
+
+run_local_hook() {
+  local local_hook
+  local_hook="$(git rev-parse --git-path hooks/prepare-commit-msg 2>/dev/null || true)"
+  if [[ -n "$local_hook" && -x "$local_hook" && "$local_hook" != "$0" ]]; then
+    "$local_hook" "$@"
+  fi
+}
+
+# Don't rewrite merge/squash commit messages
+if [[ "$SOURCE" == "merge" || "$SOURCE" == "squash" ]]; then
+  run_local_hook "$@"
+  exit 0
+fi
+
+branch=$(git symbolic-ref --short HEAD 2>/dev/null || true)
+if [[ -z "$branch" ]]; then
+  run_local_hook "$@"
+  exit 0
+fi
+
+if [[ "$branch" =~ ^(feature/)?([A-Za-z0-9]+)-([0-9]+)(-|$) ]]; then
+  project="${BASH_REMATCH[2]}"
+  ticket="${BASH_REMATCH[3]}"
+  prefix="[${project}-${ticket}] - "
+else
+  run_local_hook "$@"
+  exit 0
+fi
+
+# Avoid double-prepending (amend, gitcm, retries)
+if grep -qE "^\[${project}-${ticket}\]" "$COMMIT_MSG_FILE" 2>/dev/null; then
+  run_local_hook "$@"
+  exit 0
+fi
+
+tmp=$(mktemp)
+{
+  printf '%s' "$prefix"
+  cat "$COMMIT_MSG_FILE"
+} >"$tmp"
+mv "$tmp" "$COMMIT_MSG_FILE"
+
+run_local_hook "$@"

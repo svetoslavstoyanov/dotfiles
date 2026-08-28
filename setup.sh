@@ -29,4 +29,5 @@ install_packages "$SUDO"
 setup_locale "$SUDO"
 
 config_tmux
+config_git_hooks
 change_shell_to_zsh
