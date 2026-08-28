@@ -15,6 +15,7 @@ install_packages() {
     unzip \
     neovim \
     lazygit \
+    git-delta \
     ripgrep \
     fd \
     zoxide \
