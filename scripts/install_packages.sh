@@ -38,6 +38,9 @@ install_packages() {
     warn "yay already installed"
   fi
 
+  # --- Install herdr ---
+  yay -S --noconfirm --answerdiff None --answerclean None herdr-bin
+
   # --- fnm (Fast Node Manager) ---
   log "Installing fnm"
   yay -S --noconfirm --needed fnm-bin || yay -S --noconfirm --needed fnm
