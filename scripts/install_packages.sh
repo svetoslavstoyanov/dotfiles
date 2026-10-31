@@ -25,6 +25,7 @@ install_packages() {
     base-devel \
     lsof \
     jq \
+    fx \
     lazydocker \
     ncurses
 
