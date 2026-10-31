@@ -38,10 +38,6 @@ format = " [$symbol$branch]($style)"
 symbol = " "
 style = "bold #AF6EEB"
 
-[git_commit]
-commit_hash_length = 8
-style = "bold white"
-
 [git_status]
 format = "[$all_status$ahead_behind]($style)"
 conflicted = " ⚔️ ×${count}"
@@ -55,18 +51,6 @@ staged = " +×${count}"
 renamed = " »×${count}"
 deleted = " ✘×${count}"
 style = "#b0e0e6"
-
-[git_state]
-format = '\([$state( $progress_current/$progress_total)]($style)\) '
-rebase = "REBASING"
-merge = "MERGING"
-revert = "REVERTING"
-cherry_pick = "CHERRY-PICKING"
-bisect = "BISECTING"
-am = "AM"
-am_or_rebase = "AM/REBASE"
-style = "bold yellow"
-disabled = false
 
 [git_metrics]
 added_style = "bold blue"

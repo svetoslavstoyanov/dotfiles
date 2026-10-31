@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "./scripts/bootstrap.sh"
+REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=scripts/bootstrap.sh
+source "$REPO_ROOT/scripts/bootstrap.sh"
 
 SUDO=""
 sudo_check SUDO
@@ -11,18 +14,10 @@ log "Updating system"
 $SUDO pacman -Syu --noconfirm
 
 # --- link config dir ---
-LINK_REPO_DIR="$HOME/dev/personal/dotfiles"
-CONFIG="config"
-LINK_CONFIG_DIR="$LINK_REPO_DIR/$CONFIG"
-TARGET_LINK_CONFIG_DIR="$HOME/.$CONFIG"
-
-link_dir_content "$LINK_CONFIG_DIR" "$TARGET_LINK_CONFIG_DIR"
+link_dir_content "$REPO_ROOT/config" "$HOME/.config"
 
 # --- link home dir ---
-LINK_HOME_DIR="$LINK_REPO_DIR/home"
-TARGET_LINK_HOME_DIR="$HOME"
-
-link_dir_content "$LINK_HOME_DIR" "$TARGET_LINK_HOME_DIR"
+link_dir_content "$REPO_ROOT/home" "$HOME"
 
 install_packages "$SUDO"
 
@@ -30,4 +25,4 @@ setup_locale "$SUDO"
 
 config_git
 config_git_hooks
-change_shell_to_zsh
+change_shell_to_zsh "$SUDO"

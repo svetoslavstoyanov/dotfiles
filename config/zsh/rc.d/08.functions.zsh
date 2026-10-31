@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 REMOTES_ORIGIN_PREFIX="remotes/origin/"
 
 function mkd() {
@@ -9,29 +7,29 @@ function mkd() {
 function gcof() {
     local BRANCH=$(git branch -a --sort=-committerdate | fzf | awk '{$1=$1};1')
 
-    git checkout $(getBranchName $BRANCH)
+    git checkout "$(getBranchName "$BRANCH")"
 }
 
 function gcotf() {
     local TAG=$(git tag -l --sort=-v:refname | fzf | awk '{$1=$1};1')
 
-    git checkout $TAG
+    git checkout "$TAG"
 }
 
 function glf() {
     local BRANCH=$(git branch -a --sort=-committerdate | fzf | awk '{$1=$1};1')
 
-    if [[ $(isOrigin $BRANCH) == true ]]; then
-        git pull origin $(getBranchName $BRANCH)
+    if [[ $(isOrigin "$BRANCH") == true ]]; then
+        git pull origin "$(getBranchName "$BRANCH")"
     else
-        git merge $(getBranchName $BRANCH)
+        git merge "$(getBranchName "$BRANCH")"
     fi
 }
 
 function gbdf {
     local BRANCH=$(git branch -a --sort=-committerdate | fzf | awk '{$1=$1};1')
 
-    git branch -D $(getBranchName $BRANCH)
+    git branch -D "$(getBranchName "$BRANCH")"
 }
 
 function gstaaf() {
@@ -41,7 +39,7 @@ function gstaaf() {
         return
     fi
 
-    git stash apply $STASH_INDEX
+    git stash apply "$STASH_INDEX"
 }
 
 function gstadf() {
@@ -51,7 +49,7 @@ function gstadf() {
         return
     fi
 
-    git stash drop $STASH_INDEX
+    git stash drop "$STASH_INDEX"
 }
 
 function gstasf() {
@@ -61,12 +59,12 @@ function gstasf() {
         return
     fi
 
-    git stash show -p $STASH_INDEX
+    git stash show -p "$STASH_INDEX"
 }
 
 function getStashIndex() {
     local STASH=$(git stash list | fzf | awk '{$1=$1};1')
-    echo $STASH | grep -oP '(?<=stash@{).*(?=})'
+    printf '%s\n' "$STASH" | grep -oP '(?<=stash@{).*(?=})'
 }
 
 function isOrigin() {
@@ -78,30 +76,32 @@ function isOrigin() {
 }
 
 function getBranchName() {
-    local BRANCH=$1
-    if [[ $(isOrigin $BRANCH) == true ]]; then
-        echo ${BRANCH#"$REMOTES_ORIGIN_PREFIX"}
+    local BRANCH="$1"
+    if [[ $(isOrigin "$BRANCH") == true ]]; then
+        printf '%s\n' "${BRANCH#"$REMOTES_ORIGIN_PREFIX"}"
     else
-        echo $BRANCH
+        printf '%s\n' "$BRANCH"
     fi
 }
 
 function runPackageJsonScript() {
     local pm="$1"
-    local command
+    local script
 
     [[ -f package.json ]] || { echo "File does not exist."; return 1; }
 
-    command=$(
+    if ! script=$(
         jq -r '.scripts | to_entries[] | "\(.key)\t=> \(.value)"' package.json |
         fzf |
         cut -f1
-    ) || return
+    ); then
+        return
+    fi
 
-    [[ $? -eq 0 && -n "$command" ]] || return
+    [[ -n "$script" ]] || return
 
-    "$pm" run "$command"
-    print -s "$pm run $command"
+    "$pm" run "$script"
+    print -s "$pm run $script"
     fc -W
 }
 
@@ -121,7 +121,9 @@ function zf() {
 
 function zgf() {
  local dir
- dir=$(zoxide query -l | xargs -I {} sh -c 'test -d {}/.git && echo {}' | fzf)
+ dir=$(zoxide query -l | while IFS= read -r candidate; do
+   [[ -d "$candidate/.git" ]] && print -r -- "$candidate"
+ done | fzf)
  [ -n "$dir" ] && z "$dir"
 }
 
@@ -170,7 +172,7 @@ function kpp() {
   fi
 
   echo "Killing process(es) on port $PORT: $PIDS"
-  kill -9 $PIDS
+  kill -9 ${=PIDS}
 }
 
 git_stash_pick() {

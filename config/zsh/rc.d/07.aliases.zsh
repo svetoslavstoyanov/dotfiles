@@ -1,15 +1,13 @@
-#!/usr/bin/env bash
-
-alias ll="exa --long --header --icons --group-directories-first --sort=ext -F"
-alias lla="ll -aDf"
+alias ll="eza --long --header --icons --group-directories-first --sort=ext --classify=auto"
+alias lla="ll -a"
 alias lld="ll -D"
 alias llda="lld -a"
 alias llf="ll -f"
 alias llfa="ll -af"
-alias glogdp="git log --stat --patch --graph --pretty='\''%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset'\'"
+alias glogdp="git log --stat --patch --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset'"
 alias y="xclip"
 alias p="xclip -o"
-alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
+alias ranger='command ranger --choosedir="$HOME/.rangerdir" && cd -- "$(cat "$HOME/.rangerdir")"'
 alias v=nvim
 alias cat="bat"
 alias lg="lazygit"

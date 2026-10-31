@@ -72,7 +72,7 @@ ensure_git_delta() {
 
   if ! command -v delta &>/dev/null; then
     warn "delta not found; skip pager config (install git-delta)"
-    return 1
+    return 0
   fi
 
   git config --global core.pager delta

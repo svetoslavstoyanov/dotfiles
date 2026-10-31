@@ -8,6 +8,7 @@ sudo_check() {
 
   if ! is_root; then
     if command -v sudo &>/dev/null; then
+      # shellcheck disable=SC2034 # assigned through the nameref
       sudo_ref="sudo"
     else
       warn "sudo is not installed and you're not root."

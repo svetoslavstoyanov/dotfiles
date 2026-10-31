@@ -1,0 +1,26 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install linters
+        run: sudo apt-get update && sudo apt-get install -y shellcheck zsh
+
+      - name: ShellCheck
+        run: shellcheck setup.sh scripts/*.sh config/git/hooks/prepare-commit-msg
+
+      - name: Zsh syntax
+        run: |
+          for f in config/zsh/rc.d/*.zsh home/.zshrc; do
+            zsh -n "$f"
+          done

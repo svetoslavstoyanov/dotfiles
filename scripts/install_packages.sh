@@ -1,7 +1,22 @@
 #!/usr/bin/env bash
 
+install_zsh_plugin() {
+  local repo="$1"
+  local name="$2"
+  local dest="$ZSH_CUSTOM/plugins/$name"
+
+  if [[ -d "$dest" ]]; then
+    warn "$name already installed"
+    return 0
+  fi
+
+  log "Installing $name"
+  git clone --depth 1 "https://github.com/$repo" "$dest"
+}
+
 install_packages() {
   local SUDO="$1"
+
   # --- packages ---
   log "Installing pacman packages"
   $SUDO pacman -S --noconfirm --needed \
@@ -32,15 +47,20 @@ install_packages() {
   # --- yay (AUR helper) ---
   if ! command -v yay &>/dev/null; then
     log "Installing yay (AUR helper)"
-    rm -rf /tmp/yay
-    git clone https://aur.archlinux.org/yay.git /tmp/yay
-    (cd /tmp/yay && makepkg -si --noconfirm)
+    local yay_dir
+    yay_dir="$(mktemp -d)"
+    git clone --depth 1 https://aur.archlinux.org/yay.git "$yay_dir"
+    if ! (cd "$yay_dir" && makepkg -si --noconfirm); then
+      rm -rf "$yay_dir"
+      return 1
+    fi
+    rm -rf "$yay_dir"
   else
     warn "yay already installed"
   fi
 
   # --- Install herdr ---
-  yay -S --noconfirm --answerdiff None --answerclean None herdr-bin
+  yay -S --noconfirm --needed --answerdiff None --answerclean None herdr-bin
 
   # --- fnm (Fast Node Manager) ---
   log "Installing fnm"
@@ -64,27 +84,27 @@ install_packages() {
     warn "Oh My Zsh already installed"
   fi
 
-  # --- Antigen ---
-  if [[ ! -f "$HOME/.antigen.zsh" ]]; then
-    log "Installing Antigen"
-    curl -fsSL git.io/antigen >"$HOME/.antigen.zsh"
-  else
-    warn "Antigen already installed"
-  fi
+  # --- Oh My Zsh plugins ---
+  local ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+  install_zsh_plugin zsh-users/zsh-completions zsh-completions
+  install_zsh_plugin zsh-users/zsh-autosuggestions zsh-autosuggestions
+  install_zsh_plugin zsh-users/zsh-syntax-highlighting zsh-syntax-highlighting
 
   # --- LazyVim ---
-  log "Installing LazyVim (Neovim configuration)"
-  NVIM_DIR="$HOME/.config/nvim"
-  BACKUP_DIR="$HOME/.config/nvim.bak.$(date +%Y%m%d%H%M%S)"
+  local NVIM_DIR="$HOME/.config/nvim"
   if [[ -d "$NVIM_DIR" ]]; then
-    warn "Existing Neovim config found. Backing up to $BACKUP_DIR"
-    mv "$NVIM_DIR" "$BACKUP_DIR"
+    warn "Neovim config already exists at $NVIM_DIR; skipping LazyVim install"
+  else
+    log "Installing LazyVim (Neovim configuration)"
+    git clone --depth 1 https://github.com/LazyVim/starter "$NVIM_DIR"
+    rm -rf "$NVIM_DIR/.git"
   fi
-  git clone https://github.com/LazyVim/starter "$NVIM_DIR"
-  rm -rf "$NVIM_DIR/.git"
 
   # --- .NET ---
-  log "Installing .NET"
-  curl -fsSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel LTS
-
+  if [[ -x "$HOME/.dotnet/dotnet" ]] || command -v dotnet &>/dev/null; then
+    warn ".NET already installed"
+  else
+    log "Installing .NET"
+    curl -fsSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel LTS
+  fi
 }
