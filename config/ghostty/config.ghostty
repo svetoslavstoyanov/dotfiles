@@ -1,6 +1,17 @@
 gtk-titlebar-hide-when-maximized = true
 window-decoration = true
-font-family = "JetBrainsMono Nerd Font"
-font-size = 14.0
 theme = Catppuccin Macchiato
 
+font-family = "JetBrainsMono Nerd Font"
+font-feature = calt
+font-feature = liga
+font-size = 12.0
+
+adjust-cell-height = 10%
+adjust-cell-width = 0
+adjust-underline-position = 2
+adjust-underline-thickness = 1
+
+copy-on-select = clipboard
+clipboard-read = allow
+clipboard-write = allow
