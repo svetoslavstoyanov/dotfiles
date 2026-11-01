@@ -25,13 +25,31 @@ write_git_identity() {
   local path="$1"
   local name="$2"
   local email="$3"
+  local ssh_key="$4"
 
   cat >"$path" <<EOF
 [user]
   name = $name
   email = $email
+[core]
+  sshCommand = ssh -i $ssh_key -o IdentitiesOnly=yes
 EOF
   echo "→ Wrote $path"
+}
+
+generate_ssh_key() {
+  local path="$1"
+  local email="$2"
+
+  if [[ -f "$path" ]]; then
+    echo "✔ SSH key already exists: $path"
+    return
+  fi
+
+  mkdir -p "$HOME/.ssh"
+  chmod 700 "$HOME/.ssh"
+  ssh-keygen -t ed25519 -C "$email" -f "$path"
+  echo "→ Generated SSH key: $path"
 }
 
 ensure_gitconfig_includes() {
@@ -137,8 +155,14 @@ config_git() {
   w_last="$(prompt_nonempty "  Last name" "$p_last")"
   w_email="$(prompt_nonempty "  Email")"
 
-  write_git_identity "$personal_cfg" "$p_first $p_last" "$p_email"
-  write_git_identity "$work_cfg" "$w_first $w_last" "$w_email"
+  local personal_key="$HOME/.ssh/id_ed25519_personal"
+  local work_key="$HOME/.ssh/id_ed25519_work"
+
+  generate_ssh_key "$personal_key" "$p_email"
+  generate_ssh_key "$work_key" "$w_email"
+
+  write_git_identity "$personal_cfg" "$p_first $p_last" "$p_email" "$personal_key"
+  write_git_identity "$work_cfg" "$w_first $w_last" "$w_email" "$work_key"
   ensure_gitconfig_includes
   ensure_git_defaults
   ensure_git_delta
