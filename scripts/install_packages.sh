@@ -28,7 +28,7 @@ install_packages() {
     fx \
     lazydocker \
     ncurses \
-    ttf-jetbrains-mono
+    ttf-jetbrains-mono-nerd
 
   # --- yay (AUR helper) ---
   if ! command -v yay &>/dev/null; then
