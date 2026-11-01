@@ -1,0 +1,6 @@
+gtk-titlebar-hide-when-maximized = true
+window-decoration = true
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14.0
+theme = Catppuccin Macchiato
+
