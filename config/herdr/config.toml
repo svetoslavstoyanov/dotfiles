@@ -24,8 +24,8 @@ tab_bar_right_separator = " · "
 
 tab_bar_right = [
   { type = "zoom" },
-  { type = "datetime", format = "%H:%M" },
   { type = "command", command = "~/.config/herdr/resources.sh", interval_seconds = 5, timeout_seconds = 2 },
+  { type = "datetime", format = "%H:%M" },
 ]
 
 toast = { delivery = "system" }
