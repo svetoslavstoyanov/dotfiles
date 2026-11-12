@@ -1,18 +1,15 @@
 #!/usr/bin/env bash
 
 change_shell_to_zsh() {
-  ZSH_PATH="/usr/bin/zsh"
-  if [[ "${SHELL:-}" != *zsh ]]; then
-    log "Setting zsh as default shell"
-    if [[ -w /etc/shells ]] || $SUDO true 2>/dev/null; then
-      if ! grep -qFx "$ZSH_PATH" /etc/shells; then
-        echo "$ZSH_PATH" | $SUDO tee -a /etc/shells >/dev/null
-      fi
-    fi
-    chsh -s "$ZSH_PATH" || warn "chsh failed (common on WSL). You can still use zsh by running: exec zsh"
+  local SUDO="$1" zsh_path="/usr/bin/zsh" username="${USER:-$(id -un)}"
+  local current_shell
+
+  current_shell="$(getent passwd "$username" | cut -d: -f7)"
+  [[ "$current_shell" == "$zsh_path" ]] && return
+
+  log "Setting zsh as the default shell for $username"
+  if ! grep -qFx "$zsh_path" /etc/shells; then
+    echo "$zsh_path" | $SUDO tee -a /etc/shells >/dev/null
   fi
-
-  cd
-  exec zsh
-
+  $SUDO chsh -s "$zsh_path" "$username" || warn "Could not change the default shell"
 }

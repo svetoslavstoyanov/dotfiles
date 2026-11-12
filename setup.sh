@@ -1,33 +1,156 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "./scripts/bootstrap.sh"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-SUDO=""
-sudo_check SUDO
+# shellcheck source=scripts/bootstrap.sh
+source "$SCRIPT_DIR/scripts/bootstrap.sh"
 
-# --- update ---
-log "Updating system"
-$SUDO pacman -Syu --noconfirm
+usage() {
+  cat <<'EOF'
+Usage: ./setup.sh [stage]
 
-# --- link config dir ---
-LINK_REPO_DIR="$HOME/dev/personal/dotfiles"
-CONFIG="config"
-LINK_CONFIG_DIR="$LINK_REPO_DIR/$CONFIG"
-TARGET_LINK_CONFIG_DIR="$HOME/.$CONFIG"
+Stages:
+  update            Update Arch Linux with pacman
+  create-user       Create a user and grant wheel sudo access
+  install-packages  Install pacman, AUR, and user packages
+  link-config       Link files from config/ into ~/.config/
+  link-home         Link files from home/ into ~/
+  git-config        Configure Git identities, defaults, delta, and hooks
 
-link_dir_content "$LINK_CONFIG_DIR" "$TARGET_LINK_CONFIG_DIR"
+With no stage, run the full setup as root: update, create a user, then run
+the personal setup stages as that user. Use --help to show this message.
+EOF
+}
 
-# --- link home dir ---
-LINK_HOME_DIR="$LINK_REPO_DIR/home"
-TARGET_LINK_HOME_DIR="$HOME"
+require_root() {
+  if [[ ${EUID:-$(id -u)} -ne 0 ]]; then
+    error "This stage must run as root. Run it with sudo or from a root shell."
+    exit 1
+  fi
+}
 
-link_dir_content "$LINK_HOME_DIR" "$TARGET_LINK_HOME_DIR"
+run_update() {
+  require_root
+  log "Updating system"
+  pacman -Syu --noconfirm
+}
 
-install_packages "$SUDO"
+run_create_user() {
+  require_root
+  create_sudo_user
+}
 
-setup_locale "$SUDO"
+run_install_packages() {
+  if [[ ${EUID:-$(id -u)} -eq 0 ]]; then
+    error "Run install-packages as the target user; AUR packages must not be built as root."
+    return 1
+  fi
+  local SUDO=""
+  sudo_check SUDO
 
-config_git
-config_git_hooks
-change_shell_to_zsh
+  install_packages "$SUDO"
+  setup_locale "$SUDO"
+  change_shell_to_zsh "$SUDO"
+}
+
+run_link_config() {
+  link_dir_content "$SCRIPT_DIR/config" "$HOME/.config"
+}
+
+run_link_home() {
+  link_dir_content "$SCRIPT_DIR/home" "$HOME"
+}
+
+run_git_config() {
+  config_git
+  config_git_hooks
+}
+
+user_home_for() {
+  local username="$1" passwd_line home_dir
+  passwd_line="$(getent passwd "$username")" || return 1
+  IFS=: read -r _ _ _ _ _ home_dir _ <<<"$passwd_line"
+  printf '%s' "$home_dir"
+}
+
+prepare_user_checkout() {
+  local username="$1" user_home="$2" user_repo="$2/dev/personal/dotfiles"
+
+  if runuser -u "$username" -- test -r "$SCRIPT_DIR/setup.sh"; then
+    printf '%s' "$SCRIPT_DIR"
+    return
+  fi
+
+  if [[ -e "$user_repo" ]]; then
+    error "The checkout is not readable by $username, and $user_repo already exists."
+    error "Make the intended checkout readable by that user, then rerun setup."
+    return 1
+  fi
+
+  log "Copying the setup checkout to $user_repo for $username" >&2
+  install -d -o "$username" -g "$(id -gn "$username")" "$user_home/dev/personal"
+  install -d -o "$username" -g "$(id -gn "$username")" "$user_repo"
+  if ! tar -C "$SCRIPT_DIR" \
+    --exclude='config/herdr/*.log' \
+    --exclude='config/herdr/*.sock' \
+    --exclude=config/herdr/.plugins.lock \
+    --exclude=config/herdr/session.json \
+    --exclude=config/herdr/session-snapshots \
+    --exclude='config/zsh/rc.d/*.zwc' \
+    --exclude=config/tmux/plugins \
+    -cf - . | tar -C "$user_repo" -xf -; then
+    rm -rf "$user_repo"
+    return 1
+  fi
+  chown -R "$username:$(id -gn "$username")" "$user_repo"
+  printf '%s' "$user_repo"
+}
+
+run_personal_setup_as() {
+  local username="$1" user_home user_repo
+  user_home="$(user_home_for "$username")" || {
+    error "Could not determine the home directory for $username."
+    return 1
+  }
+  user_repo="$(prepare_user_checkout "$username" "$user_home")" || return 1
+
+  runuser -u "$username" -- env \
+    HOME="$user_home" USER="$username" LOGNAME="$username" \
+    bash "$user_repo/setup.sh" __personal-setup
+}
+
+run_full_setup() {
+  require_root
+  run_update
+  local username
+  create_sudo_user || return 1
+  username="$CREATED_USERNAME"
+  run_personal_setup_as "$username"
+}
+
+run_personal_setup() {
+  run_install_packages
+  run_link_config
+  run_link_home
+  run_git_config
+}
+
+stage="${1:-all}"
+if [[ $# -gt 1 ]]; then
+  usage >&2
+  exit 2
+fi
+
+case "$stage" in
+  all) run_full_setup ;;
+  update) run_update ;;
+  create-user) run_create_user ;;
+  install-packages) run_install_packages ;;
+  link-config) run_link_config ;;
+  link-home) run_link_home ;;
+  git-config) run_git_config ;;
+  __personal-setup) run_personal_setup ;;
+  -h|--help|help) usage ;;
+  *) error "Unknown stage: $stage"; usage >&2; exit 2 ;;
+esac
