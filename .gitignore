@@ -1,1 +1,6 @@
 config/tmux/plugins
+config/herdr/.plugins.lock
+config/herdr/*.log
+config/herdr/session.json
+config/herdr/session-snapshots/
+config/zsh/rc.d/*.zwc
