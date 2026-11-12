@@ -55,13 +55,13 @@ Each stage can also be run separately:
 ```bash
 sudo ./setup.sh update
 sudo ./setup.sh create-user
-./setup.sh install-packages
+# Log in as the created user, then run:
 ./setup.sh link-config
 ./setup.sh link-home
+./setup.sh install-packages
 ./setup.sh git-config
 ```
 
-`update` and `create-user` require root. Run `install-packages` as the target
-user so AUR packages are built without root; it uses sudo for pacman and
-system configuration. The link and Git stages run as the account that owns
-the target home directory.
+`update` and `create-user` require root. Run the remaining stages as the
+created user; `install-packages` uses sudo for pacman and system configuration
+while building AUR packages without root.

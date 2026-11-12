@@ -49,7 +49,7 @@ run_install_packages() {
   local SUDO=""
   sudo_check SUDO
 
-  install_packages "$SUDO"
+  install_packages
   setup_locale "$SUDO"
   change_shell_to_zsh "$SUDO"
 }
@@ -134,9 +134,9 @@ run_full_setup() {
 }
 
 run_personal_setup() {
-  run_install_packages
   run_link_config
   run_link_home
+  run_install_packages
   run_git_config
 }
 
