@@ -122,7 +122,11 @@ run_personal_setup_as() {
 
 run_full_setup() {
   require_root
-  run_update
+  if [[ "${DOTFILES_SKIP_UPDATE:-0}" == 1 ]]; then
+    log "System update already completed by install.sh"
+  else
+    run_update
+  fi
   local username
   create_sudo_user || return 1
   username="$CREATED_USERNAME"

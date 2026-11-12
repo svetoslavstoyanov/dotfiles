@@ -16,11 +16,24 @@ dotfiles/
 ├── config/     # ~/.config symlink targets
 ├── home/       # files symlinked directly into $HOME
 ├── scripts/    # helper and bootstrap scripts
+├── install.sh  # one-command installer
 ├── setup.sh    # main setup entry point
 └── README.md
 ```
 
 ## 🚀 Quick start
+
+For a one-command install from the temporary `optimize-repo` test branch:
+
+```bash
+( tmp="$(mktemp)" && trap 'rm -f "$tmp"' EXIT && \
+  curl -fsSL https://raw.githubusercontent.com/svetoslavstoyanov/dotfiles/optimize-repo/install.sh \
+    -o "$tmp" && bash "$tmp" )
+```
+
+The installer updates Arch, ensures Git is installed, checks out
+`optimize-repo`, and runs the full setup. The checkout line in `install.sh` is
+temporary and should be removed after testing.
 
 Run the following commands on a fresh system by invoking the script with
 sudo. The setup updates Arch, creates a sudo-enabled user, and runs the
