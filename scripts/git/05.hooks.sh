@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-config_git_hooks() {
+git_hooks() {
   local hooks_dir="$HOME/.config/git/hooks"
   local hook="$hooks_dir/prepare-commit-msg"
 
   log "Configuring global Git hooks"
 
   if [[ ! -f "$hook" ]]; then
-    warn "Hook not found at $hook (is config/git linked into ~/.config?)"
+    warn "Hook not found at $hook (run copy-conf.sh first?)"
     return 1
   fi
 

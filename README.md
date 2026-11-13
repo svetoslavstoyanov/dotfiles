@@ -16,6 +16,7 @@ dotfiles/
 ├── config/          # files copied into ~/.config
 ├── home/            # files copied directly into $HOME
 ├── scripts/         # helper and bootstrap scripts
+│   ├── git/         # split Git configuration steps
 │   └── install-packages/ # split package installation steps
 ├── setup.sh         # main setup entry point
 ├── copy-conf.sh     # copies configuration without running the full setup

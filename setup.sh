@@ -18,5 +18,4 @@ install_packages "$SUDO"
 setup_locale "$SUDO"
 
 config_git
-config_git_hooks
 change_shell_to_zsh
