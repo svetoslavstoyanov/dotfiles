@@ -27,6 +27,7 @@ install_pacman() {
     jq \
     fx \
     lazydocker \
+    docker docker-compose docker-buildx \
     ncurses \
     ttf-jetbrains-mono-nerd
 }

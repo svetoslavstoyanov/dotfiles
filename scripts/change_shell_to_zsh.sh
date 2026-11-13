@@ -10,9 +10,8 @@ change_shell_to_zsh() {
       fi
     fi
     chsh -s "$ZSH_PATH" || warn "chsh failed (common on WSL). You can still use zsh by running: exec zsh"
+    cd
+    exec zsh
   fi
-
-  cd
-  exec zsh
 
 }

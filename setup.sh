@@ -17,6 +17,8 @@ $SUDO pacman -Syu --noconfirm
 
 install_packages "$SUDO"
 
+config_docker "$SUDO"
+
 setup_locale "$SUDO"
 
 config_git
