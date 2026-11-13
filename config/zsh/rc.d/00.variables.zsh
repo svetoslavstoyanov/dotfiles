@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
-
 export EDITOR="nvim"
-export VISUAL_EDITOR="code"
+export VISUAL="code"
+export VISUAL_EDITOR="$VISUAL"

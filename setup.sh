@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source "./scripts/bootstrap.sh"
+REPO_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+source "$REPO_DIR/scripts/bootstrap.sh"
 
 SUDO=""
 sudo_check SUDO
@@ -11,7 +13,7 @@ log "Updating system"
 $SUDO pacman -Syu --noconfirm
 
 # --- copy configuration ---
-./copy-conf.sh
+"$REPO_DIR/copy-conf.sh"
 
 install_packages "$SUDO"
 

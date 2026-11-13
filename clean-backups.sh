@@ -17,7 +17,8 @@ collect_backups() {
     if [[ -d "$item" && ! -L "$item" ]]; then
       collect_backups "$item" "$target"
     else
-      for backup in "$target".bak.[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]; do
+      for backup in "$target".bak.*; do
+        [[ "$backup" =~ \.bak\.[0-9]{14}([0-9]{3})?$ ]] || continue
         [[ -f "$backup" ]] && printf '%s\0' "$backup"
       done
     fi

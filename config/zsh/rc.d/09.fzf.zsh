@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 eval "$(fzf --zsh)"
 
 export FZF_DEFAULT_COMMAND="fd --hidden --follow --exclude .git"

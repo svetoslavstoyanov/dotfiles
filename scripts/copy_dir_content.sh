@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+backup_path() {
+  printf '%s.bak.%s' "$1" "$(date +%Y%m%d%H%M%S%3N)"
+}
+
 copy_file() {
   local src="$1"
   local target="$2"
@@ -17,7 +21,8 @@ copy_file() {
         cp -p "$src" "$target"
         echo "⚠️  Overwrote $target (no backup)"
       else
-        local backup="$target.bak.$(date +%Y%m%d%H%M%S)"
+        local backup
+        backup="$(backup_path "$target")"
         mv "$target" "$backup"
         cp -p "$src" "$target"
         echo "⚠️  Overwrote $target (backup: $backup)"
@@ -44,7 +49,8 @@ copy_file() {
       return
     fi
 
-    local backup="$target.bak.$(date +%Y%m%d%H%M%S)"
+    local backup
+    backup="$(backup_path "$target")"
     mv "$target" "$backup"
     mv "$merged" "$target"
     echo "⚠️  Merged $target (backup: $backup)"

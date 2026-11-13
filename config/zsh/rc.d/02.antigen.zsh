@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 source ~/.antigen.zsh
 
 # Load oh-my-zsh library

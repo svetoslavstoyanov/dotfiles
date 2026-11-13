@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 alias ll="exa --long --header --icons --group-directories-first --sort=ext -F"
 alias lla="ll -aDf"
 alias lld="ll -D"

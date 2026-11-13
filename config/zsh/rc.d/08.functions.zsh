@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 REMOTES_ORIGIN_PREFIX="remotes/origin/"
 
 function mkd() {
