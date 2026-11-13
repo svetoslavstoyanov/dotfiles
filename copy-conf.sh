@@ -5,15 +5,19 @@ REPO_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$REPO_DIR/scripts/copy_dir_content.sh"
 
 NO_BACKUP=false
+OVERWRITE=false
 
-case "${1:-}" in
-  --no-backup) NO_BACKUP=true ;;
-  "") ;;
-  *)
-    echo "Usage: $0 [--no-backup]" >&2
-    exit 1
-    ;;
-esac
+while (( $# > 0 )); do
+  case "$1" in
+    --no-backup) NO_BACKUP=true ;;
+    -o|--overwrite) OVERWRITE=true ;;
+    *)
+      echo "Usage: $0 [--no-backup] [-o|--overwrite]" >&2
+      exit 1
+      ;;
+  esac
+  shift
+done
 
 copy_dir_content "$REPO_DIR/config" "$HOME/.config"
 copy_dir_content "$REPO_DIR/home" "$HOME"

@@ -230,3 +230,50 @@ git_stash_pick() {
   command git "${args[@]}"
 }
 
+runf() {
+  local recursive=false
+
+  case "${1:-}" in
+    -r|--recursive) recursive=true ;;
+    "") ;;
+    *)
+      echo "Usage: runf [-r|--recursive]" >&2
+      return 1
+      ;;
+  esac
+
+  if ! command -v fzf &>/dev/null; then
+    echo "fzf is required but not installed" >&2
+    return 1
+  fi
+
+  local -a find_args files
+  find_args=(. -type f -executable)
+
+  if [[ "$recursive" == true ]]; then
+    find_args+=(-not -path './.git/*')
+  else
+    find_args+=(-maxdepth 1)
+  fi
+
+  files=("${(@f)$(find "${find_args[@]}" -printf '%P\n' 2>/dev/null | sort)}")
+
+  if (( ${#files[@]} == 0 )); then
+    echo "No executable files found in $PWD"
+    return 0
+  fi
+
+  local selected
+  selected="$(printf '%s\n' "${files[@]}" | fzf \
+    --prompt='run> ' \
+    --preview 'if command -v bat >/dev/null 2>&1; then
+        bat --paging=never --style=numbers --color=always --line-range=:200 -- {}
+      else
+        sed -n "1,200p" -- {}
+      fi' \
+    --preview-window='right:60%:wrap')" || return 0
+  [[ -n "$selected" ]] || return 0
+
+  ./"$selected"
+}
+

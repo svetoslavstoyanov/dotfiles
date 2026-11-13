@@ -12,6 +12,19 @@ copy_file() {
       return
     fi
 
+    if [[ "${OVERWRITE:-false}" == true ]]; then
+      if [[ "${NO_BACKUP:-false}" == true ]]; then
+        cp -p "$src" "$target"
+        echo "⚠️  Overwrote $target (no backup)"
+      else
+        local backup="$target.bak.$(date +%Y%m%d%H%M%S)"
+        mv "$target" "$backup"
+        cp -p "$src" "$target"
+        echo "⚠️  Overwrote $target (backup: $backup)"
+      fi
+      return
+    fi
+
     local merged
     merged="$(mktemp "$target.merged.XXXXXX")"
     awk 'NR==FNR { seen[$0] = 1; print; next } !seen[$0]' \

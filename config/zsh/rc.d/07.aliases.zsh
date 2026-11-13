@@ -10,7 +10,7 @@ alias glogdp="git log --stat --patch --graph --pretty='\''%Cred%h%Creset -%C(aut
 alias y="xclip -selection clipboard"
 alias p="xclip -selection clipboard -o"
 alias ranger='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
-alias v=nvim
+alias v="nvim"
 alias cat="bat"
 alias lg="lazygit"
 alias ld="lazydocker"
