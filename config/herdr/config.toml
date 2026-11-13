@@ -57,3 +57,12 @@ description = "Open lazygit"
 command = "lazygit"
 width = "90%"
 height = "90%"
+
+[[keys.command]]
+# Popup lazygit over the current pane; Esc closes the popup.
+key = "prefix+shift+e"
+type = "popup"
+description = "Open popup"
+command = "zsh"
+width = "90%"
+height = "90%"
