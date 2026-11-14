@@ -1,4 +1,5 @@
-alias ll="exa --long --header --icons --group-directories-first --sort=ext -F"
+# -F (--classify) takes an optional value, so it must come before any path argument.
+alias ll="eza -F --long --header --icons --group-directories-first --sort=ext"
 alias lla="ll -aDf"
 alias lld="ll -D"
 alias llda="lld -a"
