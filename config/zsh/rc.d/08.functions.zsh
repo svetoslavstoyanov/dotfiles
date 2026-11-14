@@ -274,4 +274,3 @@ runf() {
 
   ./"$selected"
 }
-
