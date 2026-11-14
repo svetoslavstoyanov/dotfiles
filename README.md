@@ -43,12 +43,12 @@ full setup), run:
 ./copy-conf.sh
 ```
 
-When a destination file differs, the script merges it and backs it up as
-`.bak.<timestamp>`. To replace differing files instead of merging, use:
+When a destination file differs, the script backs it up as
+`.bak.<timestamp>` and copies the new version into place. To overwrite
+without creating backups, use:
 
 ```bash
-./copy-conf.sh -o             # overwrite, keep .bak backups
-./copy-conf.sh -o --no-backup # overwrite without backups
+./copy-conf.sh --no-backup
 ```
 
 To remove the `.bak.*` files created by the copy script, run:
