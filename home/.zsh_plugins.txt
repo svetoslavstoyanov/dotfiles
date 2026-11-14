@@ -1,0 +1,13 @@
+# oh-my-zsh bridge must be loaded first
+getantidote/use-omz
+
+# oh-my-zsh library and plugins
+ohmyzsh/ohmyzsh path:lib
+ohmyzsh/ohmyzsh path:plugins/git
+ohmyzsh/ohmyzsh path:plugins/command-not-found
+ohmyzsh/ohmyzsh path:plugins/docker
+
+# external plugins
+zsh-users/zsh-completions path:src kind:fpath
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-syntax-highlighting
