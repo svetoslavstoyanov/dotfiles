@@ -32,10 +32,10 @@ fi
 
 # --- bootstrap packages -----------------------------------------------------
 echo "Installing sudo, git and curl"
-if ! pacman -Sy --needed --noconfirm sudo git curl; then
+if ! pacman -Syu --needed --noconfirm sudo git curl; then
   echo "Package installation failed; refreshing archlinux-keyring and retrying" >&2
-  pacman -Sy --noconfirm archlinux-keyring
-  pacman -Sy --needed --noconfirm sudo git curl
+  pacman -Syu --noconfirm archlinux-keyring
+  pacman -Syu --needed --noconfirm sudo git curl
 fi
 
 # --- create the sudo user (separate script) ---------------------------------
@@ -45,12 +45,18 @@ tmp_user="$(mktemp)"
 trap 'rm -f "$tmp_script" "$tmp_user"' 0
 
 curl -fsSL "$RAW_BASE/scripts/installer/create-user.sh" -o "$tmp_script" ||
-  { echo "Failed to download scripts/installer/create-user.sh" >&2; exit 1; }
+  {
+    echo "Failed to download scripts/installer/create-user.sh" >&2
+    exit 1
+  }
 
 sh "$tmp_script" --output "$tmp_user" <"$TTY"
 
 user="$(cat "$tmp_user")"
-[ -n "$user" ] || { echo "User creation did not return a username." >&2; exit 1; }
+[ -n "$user" ] || {
+  echo "User creation did not return a username." >&2
+  exit 1
+}
 
 # --- clone and run setup as the new user ------------------------------------
 echo "Cloning the repository and running setup as $user"
