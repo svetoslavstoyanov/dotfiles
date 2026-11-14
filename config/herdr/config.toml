@@ -46,12 +46,10 @@ sidebar = { spaces = { rows = [
 # Keybindings & Custom Commands
 # ==============================================================================
 [keys]
-# Prefix key to enter prefix mode.
 prefix = "ctrl+space"
 
 [[keys.command]]
-# Popup lazygit over the current pane; Esc closes the popup.
-key = "prefix+shift+g"
+key = "prefix+alt+g"
 type = "popup"
 description = "Open lazygit"
 command = "lazygit"
@@ -59,10 +57,17 @@ width = "90%"
 height = "90%"
 
 [[keys.command]]
-# Popup lazygit over the current pane; Esc closes the popup.
-key = "prefix+shift+e"
+key = "prefix+alt+p"
 type = "popup"
 description = "Open popup"
 command = "zsh"
+width = "90%"
+height = "90%"
+
+[[keys.command]]
+key = "prefix+alt+d"
+type = "popup"
+description = "Open lazydocker"
+command = "lazydocker"
 width = "90%"
 height = "90%"
