@@ -54,7 +54,9 @@ user="$(cat "$tmp_user")"
 
 # --- clone and run setup as the new user ------------------------------------
 echo "Cloning the repository and running setup as $user"
-su - "$user" -c "
+# -P gives the session its own controlling terminal. Plain `su -c` creates a
+# new session without one, so sudo cannot prompt for the password.
+su -P - "$user" -c "
   set -e
   mkdir -p \"\$HOME/dev/personal\"
   git clone $REPO_URL \"\$HOME/dev/personal/dotfiles\"
