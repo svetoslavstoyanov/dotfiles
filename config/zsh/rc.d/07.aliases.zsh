@@ -48,7 +48,7 @@ alias gcu='git reset HEAD~1'  # git reset - undo last commit, keep changes
 alias gst='git status' # git status - show git status
 alias gss='git status --short' # git status --short: show short git status
 alias gsb='git status --short --branch' # git status --short --branch - show short git status with branch 
-alias glods='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset" --date=short
+alias glods='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset" --date=short'
 # --- DOCKER (all aliases start with dc) ---
 alias dcbl='docker build'  # docker build - build an image from a Dockerfile
 alias dcin='docker container inspect'  # docker container inspect - show detailed information on containers
