@@ -275,14 +275,13 @@ runf() {
   ./"$selected"
 }
 
-# Browse every alias defined in the shell with fzf. Descriptions are read from
-# the trailing comments in 07.aliases.zsh, so external aliases just show a
-# blank description. Enter prints the selected alias definition.
+# Browse the aliases defined in 07.aliases.zsh with fzf. Descriptions are read
+# from the trailing comments. Enter inserts the selected alias into the prompt,
+# ready for arguments (press Enter again to run it).
 aliasf() {
   emulate -L zsh
   local aliases_file="${${(%):-%x}:A:h}/07.aliases.zsh"
-  local line name rest selected
-  local -A desc
+  local line name desc rest selected
   local -a entries
 
   if ! command -v fzf >/dev/null 2>&1; then
@@ -290,28 +289,34 @@ aliasf() {
     return 1
   fi
 
+  if [[ ! -r $aliases_file ]]; then
+    print -ru2 -- "aliasf: cannot read $aliases_file"
+    return 1
+  fi
+
   while IFS= read -r line; do
     [[ $line == "alias "* ]] || continue
     rest=${line#alias }
     name=${rest%%=*}
-    [[ $rest == *" # "* ]] && desc[$name]=${rest##*" # "}
+    name=${(Q)name}
+    desc=
+    [[ $rest == *" # "* ]] && desc=${rest##*" # "}
+    entries+=("${name}"$'\t'"${desc}"$'\t'"${aliases[$name]}")
   done < "$aliases_file"
 
-  for line in ${(f)"$(alias -L)"}; do
-    rest=${line#alias }
-    name=${rest%%=*}
-    entries+=("${name}"$'\t'"${desc[$name]:-}")
-  done
+  if (( ${#entries[@]} == 0 )); then
+    print -ru2 -- "aliasf: no aliases found in $aliases_file"
+    return 1
+  fi
 
-  selected=$(printf '%s\n' "${entries[@]}" | fzf \
+  selected=$(printf '%s\n' "${entries[@]}" | LC_ALL=C sort | fzf \
     --delimiter=$'\t' \
+    --with-nth=1,2 \
     --prompt='alias> ' \
     --query="$1" \
-    --header='Enter: print alias definition | Ctrl-Y: copy to clipboard' \
-    --preview='print -r -- "alias {1}"; print -r -- "{2}"; print; alias {1}' \
-    --preview-window='right:60%:wrap' \
-    --bind='ctrl-y:execute-silent(alias {1} | xclip -selection clipboard)+abort') || return
+    --footer='Enter: insert into prompt | Ctrl-Y: copy definition' \
+    --bind='ctrl-y:execute-silent(print -r -- {3} | xclip -selection clipboard)+abort') || return
 
   [[ -n $selected ]] || return
-  alias -- "${selected%%$'\t'*}"
+  print -z -- "${selected%%$'\t'*} "
 }
