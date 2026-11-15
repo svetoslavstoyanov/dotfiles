@@ -1,5 +1,6 @@
 gtk-titlebar-hide-when-maximized = true
 window-decoration = true
+maximize = true
 theme = Catppuccin Macchiato
 
 font-family = "JetBrainsMono Nerd Font Mono"
