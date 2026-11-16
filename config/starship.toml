@@ -5,7 +5,7 @@ $directory\
 $git_branch\
 $git_state\
 $git_status\
-$git_metrics
+${custom.git_metrics_added}${custom.git_metrics_deleted}
 $character"""
 
 # Right-aligned: project runtimes + last command duration.
@@ -66,12 +66,38 @@ renamed = " \uf061×${count}"          # fa-arrow_right (no border)
 deleted = " \uf068×${count}"          # fa-minus (no border)
 style = "bold sky"
 
-[git_metrics]
-disabled = false
-only_nonzero_diffs = false
-format = " [+$added]($added_style)/[-$deleted]($deleted_style) "
-added_style = "bold green"
-deleted_style = "bold red"
+# Added/deleted line counts, including untracked files (unlike the built-in
+# git_metrics module). Split into two custom modules so the counts keep their
+# palette-driven green/red styles without needing unsafe_no_escape.
+# Hidden on a completely clean tree: the command prints nothing (early exit) and
+# the conditional `( ... )` format group then drops the whole module. The style
+# must be inline, since a group containing `$style` never hides.
+# NOTE: `when = true` + `require_repo` avoids a `git rev-parse` subprocess, and
+# `wc --total=only/--files0-from` are GNU coreutils extensions.
+[custom.git_metrics_added]
+description = "Git added lines (including untracked files)"
+when = true
+require_repo = true
+command = '''
+[ -n "$(git status --porcelain --untracked-files=normal)" ] || exit 0
+s=$(git diff HEAD --shortstat 2>/dev/null) || s=$(git diff --cached --shortstat 2>/dev/null)
+a=0; case $s in *insertion*) a=${s%% insertion*}; a=${a##* };; esac
+u=$(git ls-files --others --exclude-standard -z | wc -l --total=only --files0-from=- 2>/dev/null)
+printf '%d' "$((a+u))"
+'''
+format = "( [+$output](bold green)/)"
+
+[custom.git_metrics_deleted]
+description = "Git deleted lines"
+when = true
+require_repo = true
+command = '''
+[ -n "$(git status --porcelain --untracked-files=normal)" ] || exit 0
+s=$(git diff HEAD --shortstat 2>/dev/null) || s=$(git diff --cached --shortstat 2>/dev/null)
+d=0; case $s in *deletion*) d=${s%% deletion*}; d=${d##* };; esac
+printf '%d' "$d"
+'''
+format = "([-$output](bold red) )"
 
 [package]
 format = "[$symbol$version]($style) "
