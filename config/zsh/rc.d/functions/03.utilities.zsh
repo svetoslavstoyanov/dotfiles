@@ -22,65 +22,6 @@ function kpp() {
   kill -9 "${pids[@]}"
 }
 
-git_stash_pick() {
-  local files selected line msg fz_exit
-  local -a pick args
-  emulate -L zsh
-
-  command -v fzf >/dev/null 2>&1 || { print -ru2 -- 'git_stash_pick: fzf is required'; return 1; }
-
-  files=$(
-    {
-      command git diff --name-only
-      command git diff --cached --name-only
-      command git ls-files --others --exclude-standard
-    } | sort -u
-  )
-
-  [[ -n "$files" ]] || { print -ru2 -- "Nothing stashable."; return 1 }
-
-  selected=$(
-    printf '%s\n' "$files" | fzf \
-      --multi \
-      --prompt='stash files > ' \
-      --preview-window='right:65%:wrap' \
-      --bind='space:toggle+down' \
-      --bind='s:accept' \
-      --preview '
-        if git ls-files --error-unmatch -- {} >/dev/null 2>&1; then
-          git diff HEAD --color=always -- {} 2>/dev/null | sed -n "1,400p"
-        else
-          if [[ -f {} ]]; then sed -n "1,400p" -- {}; else echo "(skip preview)"; fi
-        fi
-      '
-  )
-  fz_exit=$?
-  [[ $fz_exit == 130 ]] && return 130
-
-  pick=()
-  while IFS= read -r line || [[ -n $line ]]; do
-    [[ -n "$line" ]] || continue
-    pick+=( "$line" )
-  done <<< "$selected"
-
-  (( ${#pick[@]} )) || { print -ru2 -- "No files selected."; return 1 }
-
-  local needs_u=false p
-  for p in "${pick[@]}"; do
-    command git ls-files --error-unmatch -- "$p" >/dev/null 2>&1 || needs_u=true
-  done
-
-  printf 'Stash message (optional): '
-  IFS= read -r msg
-
-  args=( stash push )
-  [[ -n "$msg" ]] && args+=( -m "$msg" )
-  [[ "$needs_u" == true ]] && args+=( -u )
-  args+=( -- "${pick[@]}" )
-
-  command git "${args[@]}"
-}
-
 runf() {
   local recursive=false
 
