@@ -34,12 +34,12 @@ function _zoxide_jump_edit() {
   "${editor[@]}"
 }
 
-function zf()  { _zoxide_jump '' false 'zoxide> ' }
-function zgf() { _zoxide_jump '' true 'git> ' }
-function zpf() { _zoxide_jump personal false 'personal> ' }
-function zwf() { _zoxide_jump work false 'work> ' }
+function zoxideFuzzy() { _zoxide_jump '' false 'zoxide> ' }
+function zoxideGitFuzzy() { _zoxide_jump '' true 'git> ' }
+function zoxidePersonalFuzzy() { _zoxide_jump personal false 'personal> ' }
+function zoxideWorkFuzzy() { _zoxide_jump work false 'work> ' }
 
-function zfv()  { _zoxide_jump_edit '' false 'zoxide> ' }
-function zgfv() { _zoxide_jump_edit '' true 'git> ' }
-function zpfv() { _zoxide_jump_edit personal false 'personal> ' }
-function zwfv() { _zoxide_jump_edit work false 'work> ' }
+function zoxideFuzzyEdit() { _zoxide_jump_edit '' false 'zoxide> ' }
+function zoxideGitFuzzyEdit() { _zoxide_jump_edit '' true 'git> ' }
+function zoxidePersonalFuzzyEdit() { _zoxide_jump_edit personal false 'personal> ' }
+function zoxideWorkFuzzyEdit() { _zoxide_jump_edit work false 'work> ' }

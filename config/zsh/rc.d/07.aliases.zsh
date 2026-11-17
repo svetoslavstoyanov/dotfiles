@@ -47,7 +47,16 @@ alias gstl='git stash list'  # git stash list - list all stashes
 alias gstp='git stash pop'  # git stash pop - apply the latest stash and remove it from the list
 alias gsw='git switch'  # git switch - switch to another branch
 alias gswc='git switch --create'  # git switch --create - create a new branch and switch to it
-alias gstpi='git_stash_pick'  # git - interactively pick changed files to stash
+alias gsf='gitSwitchFuzzy'  # gitSwitchFuzzy - switch to a branch via fzf with --guess
+alias gstf='gitSwitchTagFuzzy'  # gitSwitchTagFuzzy - switch to a tag via fzf (detached HEAD)
+alias glf='gitPullFuzzy'  # gitPullFuzzy - pull an origin branch or merge a local branch chosen via fzf
+alias grbf='gitRebaseFuzzy'  # gitRebaseFuzzy - rebase onto an origin or local branch chosen via fzf
+alias gbdf='gitBranchDeleteFuzzy'  # gitBranchDeleteFuzzy - force-delete a local branch chosen via fzf
+alias gstpi='gitStashPickFuzzy'  # gitStashPickFuzzy - interactively pick changed files to stash
+alias gstaaf='gitStashApplyFuzzy'  # gitStashApplyFuzzy - apply a stash chosen via fzf
+alias gstadf='gitStashDropFuzzy'  # gitStashDropFuzzy - drop a stash chosen via fzf
+alias gstasf='gitStashShowFuzzy'  # gitStashShowFuzzy - show the patch of a stash chosen via fzf
+alias gstc='gitStashClear'  # gitStashClear - confirm before clearing all stashes
 alias gra='git restore --staged --worktree . && git clean -fd'  # git restore + clean - discard all changes and delete untracked files (destructive)
 alias gcu='git reset HEAD~1'  # git reset - undo last commit, keep changes
 alias gst='git status' # git status - show git status
@@ -95,3 +104,23 @@ alias dcvls='docker volume ls'  # docker volume ls - list volumes
 alias dcvprune='docker volume prune'  # docker volume prune - remove unused volumes
 alias dcxc='docker container exec'  # docker container exec - run a command in a running container
 alias dcxcit='docker container exec -it'  # docker container exec -it - run a command in a running container interactively
+
+# --- ZOXIDE (fuzzy jump) ---
+alias zf='zoxideFuzzy'  # zoxideFuzzy - jump to a zoxide directory via fzf
+alias zgf='zoxideGitFuzzy'  # zoxideGitFuzzy - jump to a git repository via fzf
+alias zpf='zoxidePersonalFuzzy'  # zoxidePersonalFuzzy - jump to a personal directory via fzf
+alias zwf='zoxideWorkFuzzy'  # zoxideWorkFuzzy - jump to a work directory via fzf
+alias zfv='zoxideFuzzyEdit'  # zoxideFuzzyEdit - open $EDITOR in a zoxide directory chosen via fzf
+alias zgfv='zoxideGitFuzzyEdit'  # zoxideGitFuzzyEdit - open $EDITOR in a git repository chosen via fzf
+alias zpfv='zoxidePersonalFuzzyEdit'  # zoxidePersonalFuzzyEdit - open $EDITOR in a personal directory chosen via fzf
+alias zwfv='zoxideWorkFuzzyEdit'  # zoxideWorkFuzzyEdit - open $EDITOR in a work directory chosen via fzf
+
+# --- PACKAGES ---
+alias npmr='npmRunFuzzy'  # npmRunFuzzy - pick and run a package.json script via fzf with npm
+alias pnpmr='pnpmRunFuzzy'  # pnpmRunFuzzy - pick and run a package.json script via fzf with pnpm
+
+# --- UTILITIES ---
+alias mkd='mkdirAndCd'  # mkdirAndCd - create directories and cd into the last one
+alias kpp='killProcessOnPort'  # killProcessOnPort - kill processes listening on a port
+alias runf='runExecutableFuzzy'  # runExecutableFuzzy - pick and run an executable file via fzf
+alias aliasf='aliasFuzzy'  # aliasFuzzy - browse aliases via fzf and insert the selected one

@@ -19,10 +19,10 @@ function runPackageJsonScript() {
   fc -W
 }
 
-function npmr() {
+function npmRunFuzzy() {
   runPackageJsonScript npm
 }
 
-function pnpmr() {
+function pnpmRunFuzzy() {
   runPackageJsonScript pnpm
 }

@@ -3,13 +3,13 @@ if [[ ${(t)ALIASES_FILE:-} != *readonly* ]]; then
   typeset -gr ALIASES_FILE
 fi
 
-function mkd() {
+function mkdirAndCd() {
   (( $# )) || { print -ru2 -- 'usage: mkd <directory>...'; return 1; }
   mkdir -p -- "$@" || return
   cd -- "${@[-1]}"
 }
 
-function kpp() {
+function killProcessOnPort() {
   local port=$1
   local -a pids
 
@@ -22,7 +22,7 @@ function kpp() {
   kill -9 "${pids[@]}"
 }
 
-runf() {
+runExecutableFuzzy() {
   local recursive=false
 
   case "${1:-}" in
@@ -72,7 +72,7 @@ runf() {
 # Browse the aliases defined in 07.aliases.zsh with fzf. Descriptions are read
 # from the trailing comments. Enter inserts the selected alias into the prompt,
 # ready for arguments (press Enter again to run it).
-aliasf() {
+aliasFuzzy() {
   emulate -L zsh
   local line name desc rest selected
   local -a entries

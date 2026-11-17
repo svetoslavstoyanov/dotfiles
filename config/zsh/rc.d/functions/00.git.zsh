@@ -44,19 +44,19 @@ function _select_tag() {
   command git tag -l --sort=-v:refname 2>/dev/null | _git_pick 'tag> '
 }
 
-function gsf() {
+function gitSwitchFuzzy() {
   local branch
   branch=$(_select_branch) || return
   command git switch --guess "$(getBranchName "$branch")"
 }
 
-function gstf() {
+function gitSwitchTagFuzzy() {
   local tag
   tag=$(_select_tag) || return
   command git switch --detach "$tag"
 }
 
-function glf() {
+function gitPullFuzzy() {
   local branch target
   branch=$(_select_branch) || return
   target=$(getBranchName "$branch")
@@ -67,7 +67,7 @@ function glf() {
   fi
 }
 
-function grbf() {
+function gitRebaseFuzzy() {
   local branch target
   branch=$(_select_branch) || return
   target=$(getBranchName "$branch")
@@ -79,7 +79,7 @@ function grbf() {
 }
 
 # Only local branches are offered: deleting a remote ref needs an explicit push.
-function gbdf() {
+function gitBranchDeleteFuzzy() {
   local branch
   branch=$(
     command git for-each-ref --sort=-committerdate \
@@ -89,12 +89,12 @@ function gbdf() {
   command git branch -D "$branch"
 }
 
-git_stash_pick() {
+gitStashPickFuzzy() {
   local files selected line msg fz_exit
   local -a pick args
   emulate -L zsh
 
-  command -v fzf >/dev/null 2>&1 || { print -ru2 -- 'git_stash_pick: fzf is required'; return 1; }
+  command -v fzf >/dev/null 2>&1 || { print -ru2 -- 'gitStashPickFuzzy: fzf is required'; return 1; }
 
   files=$(
     {
@@ -165,11 +165,11 @@ function _git_stash_action() {
   command git stash "$@" "stash@{$index}"
 }
 
-function gstaaf() { _git_stash_action apply }
-function gstadf() { _git_stash_action drop }
-function gstasf() { _git_stash_action show -p }
+function gitStashApplyFuzzy() { _git_stash_action apply }
+function gitStashDropFuzzy() { _git_stash_action drop }
+function gitStashShowFuzzy() { _git_stash_action show -p }
 
-function gstc() {
+function gitStashClear() {
   local answer stashes
   stashes=$(command git stash list 2>/dev/null) || return $?
   [[ -n $stashes ]] || { print -ru2 -- 'No stashes to clear.'; return 1; }
