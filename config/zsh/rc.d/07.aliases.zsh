@@ -36,6 +36,7 @@ alias grbi='git rebase --interactive'  # git rebase --interactive - interactivel
 alias grbo='git rebase --onto'  # git rebase --onto - rebase a branch onto a different base
 alias grbs='git rebase --skip'  # git rebase --skip - skip the current patch during a rebase
 alias gstall='git stash --all'  # git stash --all - stash all changes, including untracked and ignored files
+alias gstu='git stash --include-untracked' #git stash --include-untracked - stash all changes including untracked
 alias gstaa='git stash apply'  # git stash apply - apply the latest stash, keeping it in the list
 alias gstd='git stash drop'  # git stash drop - drop the latest stash
 alias gstl='git stash list'  # git stash list - list all stashes
