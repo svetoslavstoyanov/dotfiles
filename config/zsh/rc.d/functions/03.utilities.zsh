@@ -1,41 +1,43 @@
+if [[ ${(t)ALIASES_FILE:-} != *readonly* ]]; then
+  ALIASES_FILE="${${(%):-%x}:A:h:h}/07.aliases.zsh"
+  typeset -gr ALIASES_FILE
+fi
+
 function mkd() {
-    mkdir -p "$@" && cd "$_"
+  (( $# )) || { print -ru2 -- 'usage: mkd <directory>...'; return 1; }
+  mkdir -p -- "$@" || return
+  cd -- "${@[-1]}"
 }
 
 function kpp() {
-  local PORT="$1"
+  local port=$1
+  local -a pids
 
-  if [[ -z "$PORT" ]]; then
-    echo "Usage: kpp <port>"
-    return 1
-  fi
+  [[ -n $port ]] || { print -ru2 -- 'usage: kpp <port>'; return 1; }
 
-  local PIDS
-  PIDS=$(lsof -t -i :"$PORT" 2>/dev/null)
+  pids=("${(@f)$(command lsof -t -i :"$port" 2>/dev/null)}")
+  (( ${#pids[@]} )) || { print -r -- "Nothing is running on port $port"; return 0; }
 
-  if [[ -z "$PIDS" ]]; then
-    echo "Nothing is running on port $PORT"
-    return 0
-  fi
-
-  echo "Killing process(es) on port $PORT: $PIDS"
-  kill -9 $PIDS
+  print -r -- "Killing process(es) on port $port: ${pids[*]}"
+  kill -9 "${pids[@]}"
 }
 
 git_stash_pick() {
   local files selected line msg fz_exit
   local -a pick args
-  emulate -L zsh 2>/dev/null || setopt local_options 2>/dev/null || true
+  emulate -L zsh
+
+  command -v fzf >/dev/null 2>&1 || { print -ru2 -- 'git_stash_pick: fzf is required'; return 1; }
 
   files=$(
     {
-      git diff --name-only
-      git diff --cached --name-only
-      git ls-files --others --exclude-standard
+      command git diff --name-only
+      command git diff --cached --name-only
+      command git ls-files --others --exclude-standard
     } | sort -u
   )
 
-  [[ -n "$files" ]] || { print -r -- "Nothing stashable." >&2; return 1 }
+  [[ -n "$files" ]] || { print -ru2 -- "Nothing stashable."; return 1 }
 
   selected=$(
     printf '%s\n' "$files" | fzf \
@@ -48,7 +50,7 @@ git_stash_pick() {
         if git ls-files --error-unmatch -- {} >/dev/null 2>&1; then
           git diff HEAD --color=always -- {} 2>/dev/null | sed -n "1,400p"
         else
-          if [[ -f {} ]]; then sed -n "1,400p" {}; else echo "(skip preview)"; fi
+          if [[ -f {} ]]; then sed -n "1,400p" -- {}; else echo "(skip preview)"; fi
         fi
       '
   )
@@ -61,11 +63,11 @@ git_stash_pick() {
     pick+=( "$line" )
   done <<< "$selected"
 
-  (( ${#pick[@]} )) || { print -r -- "No files selected." >&2; return 1 }
+  (( ${#pick[@]} )) || { print -ru2 -- "No files selected."; return 1 }
 
   local needs_u=false p
   for p in "${pick[@]}"; do
-    git ls-files --error-unmatch -- "$p" >/dev/null 2>&1 || needs_u=true
+    command git ls-files --error-unmatch -- "$p" >/dev/null 2>&1 || needs_u=true
   done
 
   printf 'Stash message (optional): '
@@ -86,13 +88,13 @@ runf() {
     -r|--recursive) recursive=true ;;
     "") ;;
     *)
-      echo "Usage: runf [-r|--recursive]" >&2
+      print -ru2 -- "Usage: runf [-r|--recursive]"
       return 1
       ;;
   esac
 
   if ! command -v fzf &>/dev/null; then
-    echo "fzf is required but not installed" >&2
+    print -ru2 -- "fzf is required but not installed"
     return 1
   fi
 
@@ -105,10 +107,10 @@ runf() {
     find_args+=(-maxdepth 1)
   fi
 
-  files=("${(@f)$(find "${find_args[@]}" -printf '%P\n' 2>/dev/null | sort)}")
+  files=("${(@f)$(command find "${find_args[@]}" -printf '%P\n' 2>/dev/null | sort)}")
 
   if (( ${#files[@]} == 0 )); then
-    echo "No executable files found in $PWD"
+    print -r -- "No executable files found in $PWD"
     return 0
   fi
 
@@ -131,7 +133,6 @@ runf() {
 # ready for arguments (press Enter again to run it).
 aliasf() {
   emulate -L zsh
-  local aliases_file="${${(%):-%x}:A:h:h}/07.aliases.zsh"
   local line name desc rest selected
   local -a entries
 
@@ -140,8 +141,8 @@ aliasf() {
     return 1
   fi
 
-  if [[ ! -r $aliases_file ]]; then
-    print -ru2 -- "aliasf: cannot read $aliases_file"
+  if [[ ! -r $ALIASES_FILE ]]; then
+    print -ru2 -- "aliasf: cannot read $ALIASES_FILE"
     return 1
   fi
 
@@ -153,10 +154,10 @@ aliasf() {
     desc=
     [[ $rest == *" # "* ]] && desc=${rest##*" # "}
     entries+=("${name}"$'\t'"${desc}"$'\t'"${aliases[$name]}")
-  done < "$aliases_file"
+  done < "$ALIASES_FILE"
 
   if (( ${#entries[@]} == 0 )); then
-    print -ru2 -- "aliasf: no aliases found in $aliases_file"
+    print -ru2 -- "aliasf: no aliases found in $ALIASES_FILE"
     return 1
   fi
 
