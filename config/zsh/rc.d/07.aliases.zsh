@@ -29,6 +29,8 @@ alias dres='dotnet restore'  # dotnet restore
 alias update='sudo pacman -Syu'  # pacman -Syu - full system upgrade
 # --- GIT ---
 alias gpu='git push upstream'  # git push - push commits to the upstream remote
+alias gp='git push'  # git push - push commits to the remote tracked by the current branch
+alias gpf='git push --force-with-lease'  # git push --force-with-lease - force push, but only if the remote hasn't changed
 alias grb='git rebase'  # git rebase - rebase the current branch
 alias grba='git rebase --abort'  # git rebase --abort - abort an in-progress rebase
 alias grbc='git rebase --continue'  # git rebase --continue - continue an in-progress rebase
