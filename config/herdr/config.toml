@@ -71,3 +71,11 @@ description = "Open lazydocker"
 command = "lazydocker"
 width = "90%"
 height = "90%"
+
+[[keys.command]]
+key = "prefix+alt+b"
+type = "popup"
+description = "Open btop"
+command = "btop"
+width = "90%"
+height = "90%"
