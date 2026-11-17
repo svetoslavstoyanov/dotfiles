@@ -1,18 +1,16 @@
 # Interactive Git helpers.
 # `%(refname:lstrip=2)` gives clean names (`main`, `origin/main`) without a
 # leading `*` or the `remotes/` prefix, so there is no output to reformat later.
-if [[ ${(t)REMOTES_ORIGIN_PREFIX:-} != *readonly* ]]; then
-  REMOTES_ORIGIN_PREFIX='origin/'
-  typeset -gr REMOTES_ORIGIN_PREFIX
-fi
+# Plain global on purpose: other rc files may (re)assign it during startup.
+REMOTES_ORIGIN_PREFIX='origin/'
 
 # True when $1 is an origin-tracked ref (legacy remotes/origin/* accepted too).
 function isOrigin() {
   [[ ${1:-} == "$REMOTES_ORIGIN_PREFIX"* || ${1:-} == remotes/origin/* ]]
 }
 
-# Strip the remote prefix so Git's DWIM checkout/tracking works for branches
-# that only exist on origin.
+# Strip the remote prefix so `git switch --guess` creates a local tracking
+# branch for branches that only exist on origin.
 function getBranchName() {
   local branch=${1:-}
   branch=${branch#remotes/origin/}
@@ -46,16 +44,16 @@ function _select_tag() {
   command git tag -l --sort=-v:refname 2>/dev/null | _git_pick 'tag> '
 }
 
-function gcof() {
+function gsf() {
   local branch
   branch=$(_select_branch) || return
-  command git checkout "$(getBranchName "$branch")"
+  command git switch --guess "$(getBranchName "$branch")"
 }
 
-function gcotf() {
+function gstf() {
   local tag
   tag=$(_select_tag) || return
-  command git checkout "$tag"
+  command git switch --detach "$tag"
 }
 
 function glf() {
@@ -66,6 +64,17 @@ function glf() {
     command git pull origin "$target"
   else
     command git merge "$target"
+  fi
+}
+
+function grbf() {
+  local branch target
+  branch=$(_select_branch) || return
+  target=$(getBranchName "$branch")
+  if isOrigin "$branch"; then
+    command git pull --rebase origin "$target"
+  else
+    command git rebase "$target"
   fi
 }
 
