@@ -28,6 +28,8 @@ alias db='dotnet build'  # dotnet build
 alias dres='dotnet restore'  # dotnet restore
 alias update='sudo pacman -Syu'  # pacman -Syu - full system upgrade
 # --- GIT ---
+alias gf='git fetch'  # git fetch - download refs and objects from remotes without changing the working tree
+alias gl='git pull'  # git pull - fetch and integrate remote changes into the current branch
 alias gpu='git push upstream'  # git push - push commits to the upstream remote
 alias gp='git push'  # git push - push commits to the remote tracked by the current branch
 alias gpf='git push --force-with-lease'  # git push --force-with-lease - force push, but only if the remote hasn't changed
