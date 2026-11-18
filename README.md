@@ -16,15 +16,14 @@ dotfiles/
 ├── config/          # files copied into ~/.config
 ├── home/            # files copied directly into $HOME
 ├── scripts/         # helper and bootstrap scripts
-│   ├── installer/        # standalone installer helpers
-│   │   └── create-user.sh # creates the initial sudo user
-│   ├── git/              # split Git configuration steps
-│   └── install-packages/ # split package installation steps
+│   ├── installer/   # standalone installer helpers
+│   ├── git/         # split Git configuration steps
+│   ├── install-packages/ # split package installation steps
 ├── install.sh       # bootstrap installer for a fresh Arch install
 ├── setup.sh         # main setup entry point
 ├── copy-conf.sh     # copies configuration without running the full setup
 ├── clean-backups.sh # removes backups created by copy-conf.sh
-├── restore-backup   # restores backups selected with fzf
+├── restore-backup.sh # restores backups selected with fzf
 └── README.md
 ```
 
@@ -90,8 +89,8 @@ To remove the `.bak.*` files created by the copy script, run:
 To restore a backup, run:
 
 ```bash
-./restore-backup      # pick one with fzf (newest backups on top)
-./restore-backup -a   # restore the newest backup of every file
+./restore-backup.sh     # pick one with fzf (newest backups on top)
+./restore-backup.sh -a  # restore the newest backup of every file
 ```
 
 Restoring moves the backup over the current file, replacing it.

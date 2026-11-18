@@ -19,7 +19,10 @@ run_steps() {
     fi
 
     step="${prefix}${BASH_REMATCH[1]}"
-    source "$file"
+    if ! source "$file"; then
+      warn "Failed to load $file"
+      return 1
+    fi
 
     if ! declare -F "$step" &>/dev/null; then
       warn "Skipping $name (function $step not defined)"

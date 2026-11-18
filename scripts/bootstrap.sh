@@ -8,5 +8,8 @@ BOOTSTRAP_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 for f in "$BOOTSTRAP_DIR"/*.sh; do
   [[ "$f" == "$BOOTSTRAP_DIR/bootstrap.sh" ]] && continue
   echo "$f"
-  source "$f" || echo "⚠️  Warning: failed to source $f"
+  if ! source "$f"; then
+    echo "bootstrap: failed to load $f" >&2
+    return 1
+  fi
 done
